@@ -1,0 +1,22 @@
+# User Flow: AI-Powered Interview Simulator
+Bu doküman, kullanıcının simülasyon içerisindeki yolculuğunu ve hibrit soru havuzu mantığını açıklar.
+**1. Giriş ve Yapılandırma**
+- Kullanıcı uygulamayı başlatır.
+- Hedef şirket (Trendyol, Amazon vb.) ve mülakat yapılacak rol seçilir.
+- "Simülasyonu Başlat" butonu ile süreç tetiklenir.
+**2. Hibrit Soru Mekanizması**
+- Sistem, seçilen şirkete ait iki farklı kaynağı tarar:
+- Gerçek Veri: Kullanıcıların anonim olarak paylaştığı geçmiş mülakat soruları.
+- AI Üretimi: Seçilen role uygun, güncel trendlere göre Gemini tarafından üretilen sorular.
+- Bu iki kaynak birleştirilerek kullanıcıya özel bir mülakat akışı oluşturulur.
+**3. Mülakat ve Veri Toplama**
+- Kullanıcı soruları sırayla yanıtlar.
+- Her yanıt, değerlendirme aşamasında kullanılmak üzere arka planda kayıt altına alınır.
+- Akışın bozulmaması için mülakat esnasında ara değerlendirme yapılmaz.
+**4. Değerlendirme (Feedback) Süreci**
+- Mülakat tamamlandığında "Analiz Et" aşamasına geçilir.
+- Toplanan tüm yanıtlar tek bir paket halinde AI modeline iletilir.
+- Kullanıcıya şu başlıklarda basit bir rapor sunulur:
+- Güçlü Yanlar: Verilen cevaplardaki başarılı noktalar.
+- Gelişim Alanları: Eksik kalan veya geliştirilmesi gereken kısımlar.
+- Örnek Yaklaşım: Sorulara verilebilecek ideal cevap stratejileri.
