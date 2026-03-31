@@ -1,0 +1,17 @@
+# Tech Stack: AI-Powered Interview Simulator
+Projenin temel teknik yapısı ve kullanılan araçlar.
+**1. Arayüz (Frontend)**
+- HTML5: Sayfa yapısı.
+- CSS3: Tasarım ve görünüm.
+- JavaScript: Uygulama mantığı ve buton işlevleri.
+**2. Yapay Zeka (AI)**
+- Google Gemini 2.0 Flash: Ana mülakat motoru ve analiz.
+- Gemini 1.5 Flash: Yedek model ve kota yönetimi.
+- Prompt Engineering: Şirkete özel soru kurguları.
+**3. Veri Yönetimi**
+- Karma Soru Havuzu: Gerçek kullanıcı soruları + AI soruları.
+- Tarayıcı Hafızası: Mülakat cevaplarının geçici kaydı.
+**4. Geliştirme Araçları**
+- Cursor AI & VS Code: Kod yazımı.
+- GitHub: Proje yönetimi ve dokümantasyon.
+- Google AI Essentials: Uygulamalı AI metodolojileri.
