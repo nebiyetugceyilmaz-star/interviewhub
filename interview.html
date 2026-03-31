@@ -1,0 +1,2683 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#111827" />
+    <title>InterviewHub - Interview</title>
+    <style>
+      /* -------------------------------------------------------------
+        InterviewHub UI Tokens (index.html ile aynı görsel dil)
+      -------------------------------------------------------------- */
+      :root {
+        --bg0: #070a12;
+        --bg1: #0b1220;
+        --card: rgba(255, 255, 255, 0.06);
+        --card2: rgba(255, 255, 255, 0.08);
+        --stroke: rgba(255, 255, 255, 0.14);
+        --text: rgba(255, 255, 255, 0.92);
+        --muted: rgba(255, 255, 255, 0.68);
+        --primary: #6d5efc;
+        --primary2: #22c55e;
+        --danger: #fb7185;
+        --warn: #fbbf24;
+        --shadow: 0 30px 90px rgba(0, 0, 0, 0.55);
+        --radius: 18px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        height: 100%;
+      }
+
+      body {
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial,
+          "Apple Color Emoji", "Segoe UI Emoji";
+        color: var(--text);
+        background: radial-gradient(900px 600px at 20% 10%, rgba(109, 94, 252, 0.28), transparent 60%),
+          radial-gradient(900px 600px at 80% 20%, rgba(34, 197, 94, 0.22), transparent 58%),
+          linear-gradient(180deg, var(--bg0), var(--bg1));
+      }
+
+      a {
+        color: inherit;
+      }
+
+      /* -------------------------------------------------------------
+        Layout
+      -------------------------------------------------------------- */
+      .page {
+        min-height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .topBar {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        background: rgba(255, 255, 255, 0.05);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      }
+
+      .topBarInner {
+        max-width: 1160px;
+        margin: 0 auto;
+        padding: 12px 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 220px;
+      }
+
+      .logo {
+        width: 36px;
+        height: 36px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, rgba(109, 94, 252, 1), rgba(34, 197, 94, 0.9));
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        position: relative;
+        box-shadow: 0 18px 55px rgba(109, 94, 252, 0.18);
+      }
+
+      .logo::after {
+        content: "";
+        position: absolute;
+        inset: 8px;
+        border-radius: 10px;
+        background: rgba(0, 0, 0, 0.22);
+        border: 1px solid rgba(255, 255, 255, 0.16);
+      }
+
+      .brandTitle {
+        display: grid;
+        gap: 1px;
+      }
+
+      .brandTitle strong {
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        line-height: 1.05;
+      }
+
+      .brandTitle span {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.62);
+      }
+
+      .infoStrip {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 10px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: rgba(255, 255, 255, 0.86);
+        font-size: 12px;
+        white-space: nowrap;
+      }
+
+      .pill .label {
+        color: rgba(255, 255, 255, 0.62);
+      }
+
+      .pill svg {
+        width: 14px;
+        height: 14px;
+        opacity: 0.92;
+      }
+
+      .topActions {
+        display: inline-flex;
+        gap: 10px;
+        align-items: center;
+        justify-content: flex-end;
+        min-width: 220px;
+      }
+
+      .btn {
+        border: none;
+        cursor: pointer;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        border-radius: 14px;
+        padding: 10px 12px;
+        color: #0b1220;
+        background: linear-gradient(135deg, rgba(109, 94, 252, 1), rgba(34, 197, 94, 0.95));
+        transition: transform 120ms ease, filter 120ms ease;
+      }
+
+      .btn:hover {
+        filter: brightness(1.05);
+        transform: translateY(-1px);
+      }
+
+      .btn:disabled {
+        cursor: not-allowed;
+        opacity: 0.7;
+        transform: none;
+      }
+
+      .btnGhost {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        color: rgba(255, 255, 255, 0.92);
+        font-weight: 650;
+      }
+
+      .main {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        padding: 18px 16px 22px;
+      }
+
+      .shell {
+        width: 100%;
+        max-width: 980px;
+        display: grid;
+        gap: 14px;
+      }
+
+      .card {
+        background: var(--card);
+        border: 1px solid var(--stroke);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        position: relative;
+      }
+
+      .card::before {
+        content: "";
+        position: absolute;
+        inset: -2px;
+        background: radial-gradient(800px 250px at 20% 0%, rgba(109, 94, 252, 0.22), transparent 55%),
+          radial-gradient(700px 240px at 85% 10%, rgba(34, 197, 94, 0.16), transparent 58%);
+        pointer-events: none;
+      }
+
+      .cardInner {
+        position: relative;
+        z-index: 1;
+      }
+
+      /* -------------------------------------------------------------
+        Chat UI
+      -------------------------------------------------------------- */
+      .chatHeader {
+        padding: 14px 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+        background: rgba(255, 255, 255, 0.03);
+      }
+
+      .chatHeaderTitle {
+        display: grid;
+        gap: 3px;
+      }
+
+      .chatHeaderTitle strong {
+        font-size: 14px;
+        letter-spacing: -0.01em;
+      }
+
+      .chatHeaderTitle span {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.60);
+      }
+
+      .stageBadge {
+        font-size: 12px;
+        padding: 7px 10px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        background: rgba(255, 255, 255, 0.04);
+        color: rgba(255, 255, 255, 0.86);
+        white-space: nowrap;
+      }
+
+      .chatBody {
+        height: min(66vh, 560px);
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding: 14px 14px 10px;
+        scroll-behavior: smooth;
+      }
+
+      /* Scroll bar styling - webkit browsers (Chrome, Safari, Edge) */
+      .chatBody::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      .chatBody::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.02);
+        border-radius: 4px;
+      }
+
+      .chatBody::-webkit-scrollbar-thumb {
+        background: rgba(109, 94, 252, 0.4);
+        border-radius: 4px;
+      }
+
+      .chatBody::-webkit-scrollbar-thumb:hover {
+        background: rgba(109, 94, 252, 0.6);
+      }
+
+      @media (max-width: 520px) {
+        .chatBody {
+          height: min(64vh, 540px);
+        }
+        
+        .chatBody::-webkit-scrollbar {
+          width: 6px;
+        }
+      }
+
+      .msgRow {
+        display: flex;
+        gap: 10px;
+        margin: 10px 0;
+        align-items: flex-end;
+      }
+
+      .msgRow.user {
+        flex-direction: row-reverse;
+      }
+
+      .avatar {
+        width: 34px;
+        height: 34px;
+        border-radius: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        background: rgba(255, 255, 255, 0.05);
+        display: grid;
+        place-items: center;
+        flex: 0 0 auto;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+      }
+
+      .avatar svg {
+        width: 18px;
+        height: 18px;
+        opacity: 0.92;
+      }
+
+      .bubble {
+        max-width: 78%;
+        border-radius: 16px;
+        padding: 12px 12px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.05);
+        box-shadow: 0 18px 60px rgba(0, 0, 0, 0.22);
+        line-height: 1.45;
+        font-size: 14px;
+        white-space: pre-wrap;
+      }
+
+      .msgRow.user .bubble {
+        background: rgba(109, 94, 252, 0.14);
+        border-color: rgba(109, 94, 252, 0.22);
+      }
+
+      .meta {
+        margin-top: 8px;
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        align-items: center;
+        color: rgba(255, 255, 255, 0.55);
+        font-size: 11px;
+      }
+
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 3px 8px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        background: rgba(255, 255, 255, 0.04);
+        color: rgba(255, 255, 255, 0.82);
+        font-size: 11px;
+      }
+
+      .tag.pool {
+        border-color: rgba(34, 197, 94, 0.30);
+        background: rgba(34, 197, 94, 0.12);
+      }
+
+      .tag.ai {
+        border-color: rgba(109, 94, 252, 0.35);
+        background: rgba(109, 94, 252, 0.14);
+      }
+
+      .tag.stage {
+        border-color: rgba(251, 191, 36, 0.28);
+        background: rgba(251, 191, 36, 0.12);
+      }
+
+      .composer {
+        padding: 12px;
+        border-top: 1px solid rgba(255, 255, 255, 0.10);
+        background: rgba(255, 255, 255, 0.03);
+      }
+
+      .composerGrid {
+        display: grid;
+        grid-template-columns: 1fr auto auto;
+        gap: 10px;
+        align-items: end;
+      }
+
+      @media (max-width: 680px) {
+        .composerGrid {
+          grid-template-columns: 1fr auto;
+          grid-template-areas:
+            "input input"
+            "finish send";
+        }
+        #answer {
+          grid-area: input;
+        }
+        #finishBtn {
+          grid-area: finish;
+        }
+        #sendBtn {
+          grid-area: send;
+        }
+      }
+
+      textarea {
+        width: 100%;
+        resize: none;
+        min-height: 44px;
+        max-height: 140px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        outline: none;
+        border-radius: 14px;
+        padding: 10px 12px;
+        background: rgba(255, 255, 255, 0.04);
+        color: var(--text);
+        font-size: 14px;
+        line-height: 1.35;
+      }
+
+      textarea::placeholder {
+        color: rgba(255, 255, 255, 0.38);
+      }
+
+      .toast {
+        display: none;
+        padding: 12px 12px;
+        border-radius: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        background: rgba(255, 255, 255, 0.05);
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 13px;
+        line-height: 1.45;
+        margin-top: 10px;
+      }
+
+      .toast.show {
+        display: block;
+      }
+
+      .toast.error {
+        border-color: rgba(251, 113, 133, 0.35);
+        background: rgba(251, 113, 133, 0.10);
+      }
+
+      /* -------------------------------------------------------------
+        Report overlay
+      -------------------------------------------------------------- */
+      .overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 50;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 18px 16px;
+        background: rgba(0, 0, 0, 0.52);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+      }
+
+      .overlay.show {
+        display: flex;
+      }
+
+      .report {
+        width: 100%;
+        max-width: 980px;
+        max-height: 86vh;
+        overflow: auto;
+        border-radius: 22px;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        background: rgba(255, 255, 255, 0.07);
+        box-shadow: 0 40px 120px rgba(0, 0, 0, 0.65);
+        position: relative;
+      }
+
+      .report::before {
+        content: "";
+        position: absolute;
+        inset: -2px;
+        background: radial-gradient(900px 260px at 15% 0%, rgba(109, 94, 252, 0.28), transparent 55%),
+          radial-gradient(850px 260px at 85% 10%, rgba(34, 197, 94, 0.20), transparent 58%);
+        pointer-events: none;
+      }
+
+      .reportInner {
+        position: relative;
+        z-index: 1;
+        padding: 16px;
+      }
+
+      .reportHeader {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 8px 4px 14px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+      }
+
+      .reportHeader h2 {
+        margin: 0;
+        font-size: 16px;
+        letter-spacing: -0.01em;
+      }
+
+      .reportHeader p {
+        margin: 6px 0 0 0;
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.62);
+        line-height: 1.4;
+      }
+
+      .reportGrid {
+        display: grid;
+        gap: 12px;
+        padding: 14px 2px 6px;
+      }
+
+      .reportCard {
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.04);
+        padding: 12px;
+      }
+
+      .reportCard h3 {
+        margin: 0 0 10px 0;
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.88);
+      }
+
+      .list {
+        margin: 0;
+        padding-left: 18px;
+        color: rgba(255, 255, 255, 0.80);
+        line-height: 1.5;
+        font-size: 13px;
+      }
+
+      .qList {
+        display: grid;
+        gap: 10px;
+      }
+
+      .qItem {
+        border-radius: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.04);
+        padding: 10px 10px;
+      }
+
+      .qTop {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .qText {
+        white-space: pre-wrap;
+        font-size: 13px;
+        line-height: 1.45;
+        color: rgba(255, 255, 255, 0.90);
+      }
+
+      .sourceBadge {
+        flex: 0 0 auto;
+        font-size: 11px;
+        padding: 5px 8px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        background: rgba(255, 255, 255, 0.04);
+        color: rgba(255, 255, 255, 0.82);
+        white-space: nowrap;
+      }
+
+      .sourceBadge.pool {
+        border-color: rgba(34, 197, 94, 0.35);
+        background: rgba(34, 197, 94, 0.14);
+      }
+
+      .sourceBadge.ai {
+        border-color: rgba(109, 94, 252, 0.40);
+        background: rgba(109, 94, 252, 0.16);
+      }
+
+      .sourceBadge.stage {
+        border-color: rgba(251, 191, 36, 0.28);
+        background: rgba(251, 191, 36, 0.12);
+      }
+
+      /* -------------------------------------------------------------
+        Evidence tooltip (A1/A2...) - hafif CSS çözümü
+      -------------------------------------------------------------- */
+      .evidenceWrap {
+        display: inline-flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        align-items: center;
+        margin-left: 8px;
+      }
+
+      .evidenceRef {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 3px 8px;
+        border-radius: 999px;
+        border: 1px solid rgba(109, 94, 252, 0.35);
+        background: rgba(109, 94, 252, 0.14);
+        color: rgba(255, 255, 255, 0.88);
+        font-size: 11px;
+        line-height: 1;
+        cursor: help;
+        user-select: none;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+      }
+
+      .evidenceRef::after {
+        content: attr(data-tip);
+        position: absolute;
+        left: 50%;
+        bottom: calc(100% + 12px);
+        transform: translateX(-50%);
+        width: min(520px, 70vw);
+        padding: 10px 10px;
+        border-radius: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        background: rgba(255, 255, 255, 0.08);
+        box-shadow: 0 30px 90px rgba(0, 0, 0, 0.55);
+        color: rgba(255, 255, 255, 0.92);
+        font-size: 12px;
+        line-height: 1.45;
+        white-space: pre-wrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 120ms ease, transform 120ms ease;
+      }
+
+      .evidenceRef::before {
+        content: "";
+        position: absolute;
+        left: 50%;
+        bottom: calc(100% + 6px);
+        transform: translateX(-50%);
+        width: 10px;
+        height: 10px;
+        background: rgba(255, 255, 255, 0.08);
+        border-left: 1px solid rgba(255, 255, 255, 0.16);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+        rotate: 45deg;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 120ms ease, transform 120ms ease;
+      }
+
+      .evidenceRef:hover::after,
+      .evidenceRef:hover::before {
+        opacity: 1;
+      }
+
+      .reportActions {
+        display: flex;
+        gap: 10px;
+        padding: 12px 2px 4px;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+      }
+
+      .srOnly {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <!--
+        Üst bilgi çubuğu (header): Şirket / Pozisyon / Deneyim bilgileri
+        Bu değerler index.html sayfasında localStorage'a yazılan "interviewhub:startPayload"tan okunur.
+      -->
+      <header class="topBar" aria-label="Bilgi çubuğu">
+        <div class="topBarInner">
+          <div class="brand" aria-label="InterviewHub">
+            <div class="logo" aria-hidden="true"></div>
+            <div class="brandTitle">
+              <strong>InterviewHub</strong>
+              <span>Interview Simulation</span>
+            </div>
+          </div>
+
+          <div class="infoStrip" aria-label="Seçim bilgileri">
+            <div class="pill" title="Şirket">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path
+                  d="M4 20V6.8c0-.44.36-.8.8-.8H10V4.8c0-.44.36-.8.8-.8h2.4c.44 0 .8.36.8.8V6h5c.44 0 .8.36.8.8V20"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                />
+                <path
+                  d="M8 20v-4M12 20v-6M16 20v-3"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                />
+              </svg>
+              <span class="label">Şirket</span>
+              <span id="companyPill">-</span>
+            </div>
+            <div class="pill" title="Pozisyon">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path
+                  d="M9 6V5.6c0-.88.72-1.6 1.6-1.6h2.8c.88 0 1.6.72 1.6 1.6V6"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                />
+                <path
+                  d="M5 7.6c0-.88.72-1.6 1.6-1.6h10.8c.88 0 1.6.72 1.6 1.6V20H5V7.6Z"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M9 11h6M9 14h6"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                />
+              </svg>
+              <span class="label">Pozisyon</span>
+              <span id="positionPill">-</span>
+            </div>
+            <div class="pill" title="Deneyim">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path
+                  d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Z"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                />
+                <path
+                  d="M4 20c1.6-3.6 4.4-5.4 8-5.4S18.4 16.4 20 20"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                />
+              </svg>
+              <span class="label">Deneyim</span>
+              <span id="levelPill">-</span>
+            </div>
+          </div>
+
+          <div class="topActions">
+            <a class="btn btnGhost" href="./index.html" title="Ana sayfaya dön">Geri</a>
+            <button class="btn btnGhost" id="finishTopBtn" type="button" title="Mülakatı bitir">
+              Bitir
+            </button>
+            <span class="stageBadge" id="modeBadge" style="display:none;">AI: Online</span>
+          </div>
+        </div>
+      </header>
+
+      <main class="main">
+        <div class="shell">
+          <section class="card" aria-label="Sohbet alanı">
+            <div class="cardInner">
+              <div class="chatHeader">
+                <div class="chatHeaderTitle">
+                  <strong>AI Mülakatçı</strong>
+                  <span id="subStatus">Akış hazırlanıyor…</span>
+                </div>
+                <div class="stageBadge" id="stageBadge">Aşama: -</div>
+              </div>
+
+              <div class="chatBody" id="chatBody" aria-label="Mesajlar"></div>
+
+              <div class="composer">
+                <div class="composerGrid">
+                  <label class="srOnly" for="answer">Yanıt</label>
+                  <textarea
+                    id="answer"
+                    placeholder="Yanıtını yaz ve Enter ile gönder (Shift+Enter: yeni satır)…"
+                  ></textarea>
+                  <button class="btn btnGhost" id="finishBtn" type="button">Bitir</button>
+                  <button class="btn" id="sendBtn" type="button">Gönder</button>
+                </div>
+                <div id="toast" class="toast" role="status" aria-live="polite"></div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <!-- Analiz raporu overlay (mülakat bitince açılır) -->
+    <div class="overlay" id="overlay" aria-label="Mülakat analiz raporu" role="dialog" aria-modal="true">
+      <div class="report">
+        <div class="reportInner">
+          <div class="reportHeader">
+            <div>
+              <h2>Mülakat Analiz Raporu</h2>
+              <p id="reportSub">Özet hazırlanıyor…</p>
+            </div>
+            <button class="btn btnGhost" id="closeReportBtn" type="button">Kapat</button>
+          </div>
+
+          <div class="reportGrid">
+            <div class="reportCard">
+              <h3>Performans Analizi</h3>
+              <ul class="list" id="reportStrengths"></ul>
+            </div>
+
+            <div class="reportCard">
+              <h3>Gelişim Alanları</h3>
+              <ul class="list" id="reportGrowth"></ul>
+            </div>
+
+            <div class="reportCard">
+              <h3>Sektörden İpuçları</h3>
+              <ul class="list" id="reportIndustryTips"></ul>
+            </div>
+
+            <div class="reportCard">
+              <h3>Sorular ve Kaynakları</h3>
+              <div class="qList" id="reportQuestions"></div>
+            </div>
+          </div>
+
+          <div class="reportActions">
+            <button class="btn btnGhost" id="copyJsonBtn" type="button" title="Analizi JSON olarak kopyala">
+              JSON Kopyala
+            </button>
+            <button class="btn" id="restartBtn" type="button" title="Yeni simülasyon başlat">
+              Yeni Simülasyon
+            </button>
+          </div>
+
+          <div id="reportToast" class="toast" role="status" aria-live="polite"></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      /* =============================================================
+        1) API AYARLARI (Güncellendi)
+      ============================================================== */
+      const API_KEY = "AIzaSyD2IFy1qrBlWt7UOyDi4K7ijlnItqNAYzY";
+      /* =============================================================
+        2) Sistem talimatı (PRD + istenen ton/kurallar)
+      ============================================================== */
+      const SYSTEM_INSTRUCTION =
+        "Sen profesyonel bir İK uzmanısın. Kullanıcının seçtiği kriterlere göre gerçekçi bir mülakat simülasyonu yap. " +
+        "Adayın cevap verdiği dilde (Türkçe/İngilizce) devam et. Her seferinde sadece 1 soru sor ve destekleyici ama ciddi bir ton kullan. " +
+        "⭐ YARATICI AI SORULARI: Senin oluşturduğun sorular InterviewHub'ın AI sistemi tarafından dinamik olarak üretilmektedir. Bu sorular benzersiz ve eğitim amaçlıdır. " +
+        "⚠️ KRİTİK: Daha önceki soruları ASLA TEKRAR SORMA. Önceki sorular context'te verilmişse, tamamen farklı sorular üret. " +
+        "Her soru unique ve farklı tema/beceri alanı hakkında olmalı. AI soruları yaratıcı, güncel ve eğitim değeri yüksek olmalıdır.";
+
+      /* =============================================================
+        3) UI elemanları
+      ============================================================== */
+      const chatBody = document.getElementById("chatBody");
+      const answerEl = document.getElementById("answer");
+      const sendBtn = document.getElementById("sendBtn");
+      const finishBtn = document.getElementById("finishBtn");
+      const finishTopBtn = document.getElementById("finishTopBtn");
+      const toast = document.getElementById("toast");
+      const subStatus = document.getElementById("subStatus");
+      const stageBadge = document.getElementById("stageBadge");
+      const modeBadge = document.getElementById("modeBadge");
+
+      const companyPill = document.getElementById("companyPill");
+      const positionPill = document.getElementById("positionPill");
+      const levelPill = document.getElementById("levelPill");
+
+      const overlay = document.getElementById("overlay");
+      const closeReportBtn = document.getElementById("closeReportBtn");
+      const restartBtn = document.getElementById("restartBtn");
+      const copyJsonBtn = document.getElementById("copyJsonBtn");
+      const reportToast = document.getElementById("reportToast");
+
+      const reportSub = document.getElementById("reportSub");
+      const reportStrengths = document.getElementById("reportStrengths");
+      const reportGrowth = document.getElementById("reportGrowth");
+      const reportIndustryTips = document.getElementById("reportIndustryTips");
+      const reportQuestions = document.getElementById("reportQuestions");
+
+      /* =============================================================
+        4) Durum (state) ve kaynak takibi
+
+        - asked: sorulan sorular (metin, aşama, source)
+        - sources: sadece kaynakları sessizce tutan dizi (istenen gereksinim)
+        - transcript: kullanıcı + AI mesajları (rapor üretimi için)
+      ============================================================== */
+      const asked = [];
+      const sources = []; // sadece source: "AI" | "Pool"
+      const transcript = [];
+      const answers = [];
+      let answerCounter = 0;
+      let lastQuestionId = null;
+      const askedQuestionNormalized = new Set(); // önceki soruları track et
+      let relationshipIssues = []; // Soru-cevap ilişkisi sorunları
+
+      /* =============================================================
+        5) Aşama akışı (profesyonel psikolojik akış)
+
+        - intro: giriş / tanışma
+        - technical: teknik / pozisyon
+        - closing: kapanış / davranışsal
+
+        Bu sayfa MVP olduğu için soru sayıları sabit tutuldu.
+      ============================================================== */
+      const STAGES = [
+        { id: "intro", title: "Giriş / Tanışma", targetQuestions: 5 },
+        { id: "technical", title: "Teknik / Pozisyon", targetQuestions: 8 },
+        { id: "closing", title: "Kapanış / Davranışsal", targetQuestions: 5 },
+      ];
+
+      let stageIndex = 0;
+      let stageAskedCount = { intro: 0, technical: 0, closing: 0 };
+      let interviewFinished = false;
+      let lastUserLanguageHint = "tr"; // basit ipucu; prompt zaten kullanıcı dilini takip eder
+      let askedQuestionsCount = 0; // cevap sayısını takip et
+
+      /* Ara mesajlar - cevaptan sonra, sıradaki sorudan önce gösterilecek */
+      const transitionMessages = [
+        "Harika! Sıradaki soru…",
+        "Tamamdır. Devam edelim…",
+        "Teşekkürler. Sonraki soru…",
+        "Anlaşıldı! Gelen soru…",
+        "İyi. Şimdi de bu soruya yanıt ver…",
+        "Güzel. Sıradaki…",
+        "Var mı başka? Yeni soru…",
+        "Peki. Şu soruya ne dersin?…",
+        "Evet, gördük. Şimdi…",
+        "Alındı. Sonraki soru…",
+      ];
+
+      function getRandomTransitionMessage() {
+        const msg = transitionMessages[askedQuestionsCount % transitionMessages.length];
+        return msg || "Sıradaki soru…";
+      }
+
+      /* =============================================================
+        6) localStorage'tan kullanıcı seçimlerini oku
+      ============================================================== */
+      function safeJsonParse(str) {
+        try {
+          return JSON.parse(str);
+        } catch {
+          return null;
+        }
+      }
+
+      function getStartPayload() {
+        const raw = localStorage.getItem("interviewhub:startPayload");
+        const parsed = raw ? safeJsonParse(raw) : null;
+        if (!parsed || !parsed.company || !parsed.position || !parsed.level) return null;
+        return parsed;
+      }
+
+      function humanizeLevel(level) {
+        const map = { intern: "Staj", junior: "Junior", mid: "Mid", senior: "Senior" };
+        return map[level] || String(level || "-");
+      }
+
+      const startPayload = getStartPayload();
+      companyPill.textContent = startPayload?.company || "-";
+      positionPill.textContent = startPayload?.position || "-";
+      levelPill.textContent = startPayload ? humanizeLevel(startPayload.level) : "-";
+
+      /* =============================================================
+        7) Topluluk soru havuzu (community_questions)
+
+        Beklenen: localStorage["community_questions"] içinde bir dizi.
+        Ancak veri şeması farklı olabilir; bu yüzden esnek normalize ediyoruz.
+      ============================================================== */
+      (function seedCommunityQuestionsIfMissing() {
+        /*
+          TEST SEED:
+          Kullanıcının istediği çok dilli / çok şirketli test soruları.
+
+          Mantık:
+          - Eğer community_questions yoksa veya geçersizse seed'leri yazar.
+          - Eğer zaten doluysa dokunmaz (kullanıcının kendi havuzunu ezmeyelim).
+          
+          ÖNEMLİ: Her aşama için çok sayıda FARKLI sorular eklenmiştir!
+          - Intro: 10 soru
+          - Technical: 15 soru
+          - Closing: 10 soru
+        */
+        const key = "community_questions";
+        const existingRaw = localStorage.getItem(key);
+        const existingParsed = existingRaw ? safeJsonParse(existingRaw) : null;
+
+        if (Array.isArray(existingParsed) && existingParsed.length > 0) return;
+
+        const seeds = [
+          // ============ INTRO / TANIŞMA (10 FARKLI SORU) ============
+          {
+            company: "Genel",
+            position: "Tüm pozisyonlar",
+            goal: "baseline",
+            stage: "intro",
+            question: "Kendinizden kısaca bahseder misin? Eğitim geçmişi, iş deneyimi ve kendini nasıl tanımlarsın?",
+          },
+          {
+            company: "Genel",
+            position: "Tüm pozisyonlar",
+            goal: "baseline",
+            stage: "intro",
+            question: "Boş zamanlarında kendini geliştirmek için neler yaparsın? Hangi hobiler ve aktiviteler ilgi alanlarını gösteriyor?",
+          },
+          {
+            company: "Genel",
+            position: "Tüm pozisyonlar",
+            goal: "baseline",
+            stage: "intro",
+            question: "Şu anda hayatında en önemli hedef ve bunu başarmak için attığın adımlar nelerdir?",
+          },
+          {
+            company: "Genel",
+            position: "Tüm pozisyonlar",
+            goal: "baseline",
+            stage: "intro",
+            question: "Bir mentor ya da ilham aldığın kişi var mı? Neden bu kişi seni etkiliyor?",
+          },
+          {
+            company: "Genel",
+            position: "Tüm pozisyonlar",
+            goal: "baseline",
+            stage: "intro",
+            question: "Çalışma dinamiklerinde hangi tür bir rol üstlen almaktan hoşlanırsın: lider, koordinatör, uzman mı yoksa takım oyuncusu mı?",
+          },
+          {
+            company: "Genel",
+            position: "Tüm pozisyonlar",
+            goal: "baseline",
+            stage: "intro",
+            question: "İlk aylarında yeni bir ekibe katılırken neleri kilit unsur olarak görürsün? Nasıl adaptasyon süreci geçersin?",
+          },
+          {
+            company: "Genel",
+            position: "Tüm pozisyonlar",
+            goal: "baseline",
+            stage: "intro",
+            question: "Mülakatçı olarak beni etkilemek için sana ne sorması gerektiğini düşünüyorsun?",
+          },
+          {
+            company: "Genel",
+            position: "Tüm pozisyonlar",
+            goal: "baseline",
+            stage: "intro",
+            question: "Geçtiğin en zor ayı ya da dönem anlatır mısın? Onu nasıl aştın?",
+          },
+          {
+            company: "Genel",
+            position: "Tüm pozisyonlar",
+            goal: "baseline",
+            stage: "intro",
+            question: "Beklentilerin karşılanmadığı bir durum yaşadığında ilk olarak ne yaparsın?",
+          },
+          {
+            company: "Genel",
+            position: "Tüm pozisyonlar",
+            goal: "baseline",
+            stage: "intro",
+            question: "Mükemmellik ve pratiklik arasında hangi tarafa meyillisin? Haz bir örnek verebilir misin?",
+          },
+
+          // ============ TEKNIK / POZİSYON (15 FARKLI SORU) ============
+          {
+            company: "Genel",
+            position: "Teknik Roller",
+            goal: "tech-competence",
+            stage: "technical",
+            question: "Yazılan kod kalitesini nasıl değerlendirirsin? Kalite metrikleriniz nelerdir?",
+          },
+          {
+            company: "Genel",
+            position: "Teknik Roller",
+            goal: "tech-competence",
+            stage: "technical",
+            question: "Bir tasarım sorununuz ortaya çıktığında, bunu çözmek için izlediğin adım adım süreci açıkla.",
+          },
+          {
+            company: "Genel",
+            position: "Teknik Roller",
+            goal: "tech-competence",
+            stage: "technical",
+            question: "Teknik borç (technical debt) nedir ve sen onu nasıl yönetirsin? Bir örnek verebilir misin?",
+          },
+          {
+            company: "Genel",
+            position: "Teknik Roller",
+            goal: "tech-competence",
+            stage: "technical",
+            question: "Hızlı değişen teknoloji dünyasında güncel kalmak için ne yapıyorsun? Öğrenme stratejin nedir?",
+          },
+          {
+            company: "Genel",
+            position: "Teknik Roller",
+            goal: "tech-competence",
+            stage: "technical",
+            question: "Bir sistem tasarlarken ilk olarak neyi düşünürsün? Ölçeklenebilirliği nasıl sağlarsın?",
+          },
+          {
+            company: "Genel",
+            position: "Teknik Roller",
+            goal: "tech-competence",
+            stage: "technical",
+            question: "Karşı karşıya geldiğin zor bir teknik problemi anlatır mısın? Çözüm süreci nasıl işledi?",
+          },
+          {
+            company: "Genel",
+            position: "Teknik Roller",
+            goal: "tech-competence",
+            stage: "technical",
+            question: "Performance iyileştirmesi yapmak için nasıl bir yaklaşım izlersin? Profiling ve analiz nasıl yaparsın?",
+          },
+          {
+            company: "Genel",
+            position: "Teknik Roller",
+            goal: "tech-competence",
+            stage: "technical",
+            question: "Kod review süreci hakkında neler düşünüyorsun? Iyi bir review nasıl yapılır?",
+          },
+          {
+            company: "Genel",
+            position: "Teknik Roller",
+            goal: "tech-competence",
+            stage: "technical",
+            question: "Teste dayalı geliştirme (TDD) hakkında görüşüne nedir? Kullanıyor musun? Neden?",
+          },
+          {
+            company: "Genel",
+            position: "Teknik Roller",
+            goal: "tech-competence",
+            stage: "technical",
+            question: "Architecture kararlarını versiyonluyken hangi faktörleri dikkate alırsın? Trade-off'ları nasıl değerlendirirsin?",
+          },
+          {
+            company: "Genel",
+            position: "Teknik Roller",
+            goal: "tech-competence",
+            stage: "technical",
+            question: "Standart dışı veya yaratıcı bir teknik çözüm geliştirdiğin bir projeyi anlatır mısın?",
+          },
+          {
+            company: "Genel",
+            position: "Teknik Roller",
+            goal: "tech-competence",
+            stage: "technical",
+            question: "Eski kodlarla çalışmanın zorlukları nelerdir? Legacy sistem modernizasyonunda neler yapılmalıdır?",
+          },
+          {
+            company: "Genel",
+            position: "Teknik Roller",
+            goal: "tech-competence",
+            stage: "technical",
+            question: "Version kontrolü ve branching stratejileri hakkında neler biliyorsun?",
+          },
+          {
+            company: "Genel",
+            position: "Teknik Roller",
+            goal: "tech-competence",
+            stage: "technical",
+            question: "İşbirliği yaparken hangi araç ve uygulamaları tercih edersin? Neden?",
+          },
+          {
+            company: "Genel",
+            position: "Teknik Roller",
+            goal: "tech-competence",
+            stage: "technical",
+            question: "Yeni bir teknoloji öğrenmen gerektiğinde ilk adımlarını açıkla. Nasıl yaklaşırsın?",
+          },
+
+          // ============ KAPANIS / DAVRANIŞSAL (10 FARKLI SORU) ============
+          {
+            company: "Genel",
+            position: "Tüm pozisyonlar",
+            goal: "behavioral",
+            stage: "closing",
+            question: "Stres altında bulunduğun bir durumu anlatır mısın? O anı nasıl yönettin?",
+          },
+          {
+            company: "Genel",
+            position: "Tüm pozisyonlar",
+            goal: "behavioral",
+            stage: "closing",
+            question: "Ekip içinde birisiyle fikir ayrılığın oldu mu? Bunu nasıl çözdün?",
+          },
+          {
+            company: "Genel",
+            position: "Tüm pozisyonlar",
+            goal: "behavioral",
+            stage: "closing",
+            question: "Başarısız bir projeyi veya girişimi anlatır mısın? Bundan ne öğrendin?",
+          },
+          {
+            company: "Genel",
+            position: "Tüm pozisyonlar",
+            goal: "behavioral",
+            stage: "closing",
+            question: "Bir meslektaşın yardıma ihtiyacı olduğunda, nasıl bir yaklaşım sergiliyorsun?",
+          },
+          {
+            company: "Genel",
+            position: "Tüm pozisyonlar",
+            goal: "behavioral",
+            stage: "closing",
+            question: "Liderlik potansiyeline dair bir örnek verebilir misin? Ekibi nasıl etkilediğini gör.",
+          },
+          {
+            company: "Genel",
+            position: "Tüm pozisyonlar",
+            goal: "behavioral",
+            stage: "closing",
+            question: "Adında 5 yıl sonra kendini nerede görmek istiyorsun? Kariyer hedeflerin nelerdir?",
+          },
+          {
+            company: "Genel",
+            position: "Tüm pozisyonlar",
+            goal: "behavioral",
+            stage: "closing",
+            question: "İşini gerçekten sevdiğini gösteren bir anı paylaş. O anda ne hissettin?",
+          },
+          {
+            company: "Genel",
+            position: "Tüm pozisyonlar",
+            goal: "behavioral",
+            stage: "closing",
+            question: "Başarısızlıkdan kurtulup yeniden başladığın bir örneği anlatır mısın?",
+          },
+          {
+            company: "Genel",
+            position: "Tüm pozisyonlar",
+            goal: "behavioral",
+            stage: "closing",
+            question: "Hatalı bir karar aldığın bir olayı paylaş. Nasıl düzelttin ve ne hissettim?",
+          },
+          {
+            company: "Genel",
+            position: "Tüm pozisyonlar",
+            goal: "behavioral",
+            stage: "closing",
+            question: "İdeal bir çalışma ortamında neler yer alır? Hangi özellikleri bir işyerinde arayıssın?",
+          },
+        ];
+
+        try {
+          localStorage.setItem(key, JSON.stringify(seeds));
+        } catch (_) {
+          // localStorage engelliyse sessizce geç (MVP: sayfa yine çalışsın).
+        }
+      })();
+
+      function normalizePoolItem(item) {
+        if (!item || typeof item !== "object") return null;
+
+        const question =
+          item.question ||
+          item.q ||
+          item.text ||
+          item.prompt ||
+          item.soru ||
+          item.soruMetni ||
+          item.content ||
+          "";
+
+        const company = item.company || item.companyName || item.organization || item.firm || "";
+        const position = item.position || item.role || item.title || item.job || "";
+        const level = item.level || item.experience || item.seniority || item.exp || "";
+        const stage = item.stage || item.phase || item.category || "";
+
+        const normalized = {
+          question: String(question || "").trim(),
+          company: String(company || "").trim(),
+          position: String(position || "").trim(),
+          level: String(level || "").trim(),
+          stage: String(stage || "").trim(),
+          raw: item,
+        };
+
+        if (!normalized.question) return null;
+        return normalized;
+      }
+
+      function readCommunityPool() {
+        const raw = localStorage.getItem("community_questions");
+        if (!raw) return [];
+        const parsed = safeJsonParse(raw);
+        if (!Array.isArray(parsed)) return [];
+        return parsed.map(normalizePoolItem).filter(Boolean);
+      }
+
+      function normalizeQuestion(text) {
+        // Soruları normalize et: ÇAGIN kesin bir şekilde duplicate kontrol'ü sağla
+        let normalized = String(text || "")
+          .toLowerCase()
+          .trim()
+          // TÜM noktalama işaretleri, parantez, özel karakterler çıkar
+          .replace(/[?!.,:;'"()\-\·\*\+\=\[\]\{\}\/\\]/g, "")
+          // Sayıları da kaldır (örneğin "Soru 1" = "Soru")
+          .replace(/\d+/g, "")
+          // İkiz boşlukları temizle
+          .replace(/\s+/g, " ")
+          // Başında/sonunda boşluk temizle
+          .trim()
+          // Türkçe İngilizce ortak "stop words" kaldır
+          .replace(/^(bir |the |a |an |ve |and |or |veya |bu |this |that |nedir |ne |what |how |why |which )/, "")
+          .trim();
+        
+        // Çok kısa soruları önle (gürültü)
+        if (normalized.length < 6) return null;
+        
+        // Çok uzun soruları kısalt
+        return normalized.substring(0, 120);
+      }
+
+      function looselyIncludes(haystack, needle) {
+        if (!needle) return true;
+        if (!haystack) return false;
+        return haystack.toLowerCase().includes(String(needle).toLowerCase());
+      }
+
+      function matchPoolItemToUser(item, payload) {
+        if (!payload) return false;
+        const companyOk =
+          !item.company || looselyIncludes(payload.company, item.company) || looselyIncludes(item.company, payload.company);
+        const positionOk =
+          !item.position ||
+          looselyIncludes(payload.position, item.position) ||
+          looselyIncludes(item.position, payload.position);
+        const levelOk = !item.level || String(item.level).toLowerCase() === String(payload.level).toLowerCase();
+        return companyOk && positionOk && levelOk;
+      }
+
+      function inferStage(item) {
+        const s = (item.stage || "").toLowerCase();
+        if (s.includes("intro") || s.includes("tan") || s.includes("giriş") || s.includes("giris")) return "intro";
+        if (s.includes("tech") || s.includes("tekn") || s.includes("role") || s.includes("pozisyon")) return "technical";
+        if (s.includes("close") || s.includes("kap") || s.includes("davran") || s.includes("behavior")) return "closing";
+        return "technical"; // etiket yoksa en güvenli varsayım: teknik/pozisyon
+      }
+
+      // Pool'dan aşamalara göre seçilecek soruların kuyruğu.
+      const poolQueue = [];
+      (function buildPoolQueue() {
+        const pool = readCommunityPool();
+        if (!pool.length || !startPayload) return;
+
+        const candidates = pool.filter((it) => matchPoolItemToUser(it, startPayload));
+        if (!candidates.length) return;
+
+        // Her aşama için soruları grupla
+        const byStage = { intro: [], technical: [], closing: [] };
+        for (const c of candidates) byStage[inferStage(c)].push(c);
+
+        // Shuffle function - soruları randomize etmek için
+        const shuffle = (arr) => {
+          const copy = [...arr];
+          for (let i = copy.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [copy[i], copy[j]] = [copy[j], copy[i]];
+          }
+          return copy;
+        };
+
+        // Intro: maksimum 4 soru
+        const introQuestions = shuffle(byStage.intro).slice(0, 4);
+        for (const q of introQuestions) {
+          poolQueue.push({ stage: "intro", question: q.question });
+        }
+
+        // Technical: maksimum 6 soru (en önemli aşama)
+        const techQuestions = shuffle(byStage.technical).slice(0, 6);
+        for (const q of techQuestions) {
+          poolQueue.push({ stage: "technical", question: q.question });
+        }
+
+        // Closing: maksimum 4 soru
+        const closingQuestions = shuffle(byStage.closing).slice(0, 4);
+        for (const q of closingQuestions) {
+          poolQueue.push({ stage: "closing", question: q.question });
+        }
+      })();
+
+      /* =============================================================
+        8) UI yardımcıları (toast, scroll, mesaj ekleme)
+      ============================================================== */
+      function showToast(message, { error = false } = {}) {
+        toast.textContent = message;
+        toast.classList.toggle("error", error);
+        toast.classList.add("show");
+      }
+
+      function hideToast() {
+        toast.classList.remove("show");
+      }
+
+      function showReportToast(message, { error = false } = {}) {
+        reportToast.textContent = message;
+        reportToast.classList.toggle("error", error);
+        reportToast.classList.add("show");
+        setTimeout(() => reportToast.classList.remove("show"), 2400);
+      }
+
+      function scrollToBottom() {
+        chatBody.scrollTop = chatBody.scrollHeight;
+      }
+
+      function formatTime(d = new Date()) {
+        const hh = String(d.getHours()).padStart(2, "0");
+        const mm = String(d.getMinutes()).padStart(2, "0");
+        return `${hh}:${mm}`;
+      }
+
+      function stageTitle(stageId) {
+        return STAGES.find((s) => s.id === stageId)?.title || stageId;
+      }
+
+      function setStageUI() {
+        const stage = STAGES[stageIndex];
+        stageBadge.textContent = `Aşama: ${stage ? stage.title : "-"}`;
+      }
+
+      function aiAvatarSvg() {
+        return `
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M7 9.2c0-2.32 1.88-4.2 4.2-4.2h1.6c2.32 0 4.2 1.88 4.2 4.2V12c0 2.32-1.88 4.2-4.2 4.2h-1.6C8.88 16.2 7 14.32 7 12V9.2Z" stroke="currentColor" stroke-width="1.6"/>
+            <path d="M9.5 10.8h.01M14.5 10.8h.01" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+            <path d="M9.2 14.2c.8.9 1.8 1.3 2.8 1.3s2-.4 2.8-1.3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+        `;
+      }
+
+      function addMessage({ role, text, metaTags = [], idLabel = null }) {
+        // "system" rolü için özel görünüm
+        if (role === "system") {
+          const msg = document.createElement("div");
+          msg.className = "messageRow";
+          msg.style.display = "flex";
+          msg.style.justifyContent = "center";
+          msg.style.margin = "12px 0";
+          const txt = document.createElement("div");
+          txt.style.fontSize = "13px";
+          txt.style.color = "var(--muted)";
+          txt.style.fontStyle = "italic";
+          txt.textContent = text;
+          msg.appendChild(txt);
+          chatBody.appendChild(msg);
+          chatBody.scrollTop = chatBody.scrollHeight;
+          return;
+        }
+        // role: "ai" | "user" | "system"
+        const row = document.createElement("div");
+        row.className = `msgRow ${role === "user" ? "user" : "ai"}`;
+
+        const avatar = document.createElement("div");
+        avatar.className = "avatar";
+        if (role === "user") {
+          avatar.innerHTML = `
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Z" stroke="currentColor" stroke-width="1.6"/>
+              <path d="M4 20c1.6-3.6 4.4-5.4 8-5.4S18.4 16.4 20 20" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            </svg>
+          `;
+        } else {
+          avatar.innerHTML = aiAvatarSvg();
+        }
+
+        const bubble = document.createElement("div");
+        bubble.className = "bubble";
+        bubble.textContent = text;
+
+        const meta = document.createElement("div");
+        meta.className = "meta";
+        meta.appendChild(document.createTextNode(formatTime()));
+
+        for (const tag of metaTags) {
+          const el = document.createElement("span");
+          el.className = `tag ${tag.kind}`;
+          el.textContent = tag.text;
+          meta.appendChild(el);
+        }
+
+        bubble.appendChild(meta);
+
+        row.appendChild(avatar);
+        row.appendChild(bubble);
+        chatBody.appendChild(row);
+        scrollToBottom();
+
+        transcript.push({ role, text, id: idLabel, ts: new Date().toISOString() });
+      }
+
+      function addAiMessageTyping({ text, metaTags = [], idLabel = null }) {
+        const row = document.createElement("div");
+        row.className = "msgRow ai";
+
+        const avatar = document.createElement("div");
+        avatar.className = "avatar";
+        avatar.innerHTML = aiAvatarSvg();
+
+        const bubble = document.createElement("div");
+        bubble.className = "bubble";
+
+        const textEl = document.createElement("div");
+        textEl.textContent = "";
+
+        const meta = document.createElement("div");
+        meta.className = "meta";
+        meta.appendChild(document.createTextNode(formatTime()));
+
+        for (const tag of metaTags) {
+          const el = document.createElement("span");
+          el.className = `tag ${tag.kind}`;
+          el.textContent = tag.text;
+          meta.appendChild(el);
+        }
+
+        bubble.appendChild(textEl);
+        bubble.appendChild(meta);
+
+        row.appendChild(avatar);
+        row.appendChild(bubble);
+        chatBody.appendChild(row);
+        scrollToBottom();
+
+        const full = text || "";
+        let i = 0;
+        const speedMs = 20;
+
+        function tick() {
+          i += 1;
+          textEl.textContent = full.slice(0, i);
+          scrollToBottom();
+          if (i < full.length) {
+            window.setTimeout(tick, speedMs);
+          }
+        }
+
+        // Hemen yazmaya başla (geciksiz)
+        tick();
+
+        transcript.push({ role: "ai", text, id: idLabel, ts: new Date().toISOString() });
+      }
+
+      /* =============================================================
+        9) Gemini API çağrısı (Vanilla JS)
+      ============================================================== */
+      // Hesap/proje bazlı model erişimi değişebildiği için geniş fallback listesi.
+      const GEMINI_MODELS = ["gemini-1.5-flash", "gemini-2.0-flash"];
+      let lastGeminiCallAt = 0;
+      let degradedMode = false;
+      let degradedNoticeShown = false;
+
+      function sleep(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+      }
+
+      function buildContextSummary() {
+        const stage = STAGES[stageIndex]?.id || "technical";
+        const payload = startPayload || {};
+        let result = (
+          `Kriterler: şirket="${payload.company || "-"}", pozisyon="${payload.position || "-"}", deneyim="${payload.level || "-"}", hedef="${payload.goal || "baseline"}".\n` +
+          `Şu anki aşama: ${stage} (${stageTitle(stage)}).\n`
+        );
+        
+        // Havuz ve AI karışıklığı hakkında bilgilendirme
+        result += `\n📋 SORU HAVUZU YAPISI 📋\n`;
+        result += `Bu mülakatta soruların bir kısmı gerçek mülakatlardan gelen havuz sorularıdır (HAVUZ SORULARI).\n`;
+        result += `Soruların %50'si havuzdan (Gerçek Mülakat Sorusu), %50'si AI'dan (AI TARAFINDAN ÜRETİLEN SORU) seçilir.\n`;
+        result += `⭐ AI TARAFINDAN ÜRETİLEN SORULAR: Bu soruları sen oluşturmuşsun. Benzersiz, yaratıcı ve eğitim amaçlı.\n`;
+        result += `Her soru tamamen farklı tema/alanda olmalı. Tekrar sorma YOK.\n\n`;
+        
+        // Daha önceki soruları ekleme (tekrar sorma riskini azalt)
+        if (asked.length > 0) {
+          result += `⚠️  ⚠️  ⚠️  KRİTİK: SOLDA YAZILI SORULARI ASLA TEKRAR SORMA ⚠️  ⚠️  ⚠️\n`;
+          result += `SORULMUŞ SORULAR (${asked.length} adet):\n`;
+          for (const q of asked) {
+            let badge = "";
+            if (q.source === "Pool") {
+              badge = "[HAVUZ SORULARI]";
+            } else {
+              badge = "[✨ AI TARAFINDAN ÜRETİLEN]";
+            }
+            result += `• ${badge} "${q.text}"\n`;
+          }
+          result += `\n🔴 KURALLAR 🔴\n`;
+          result += `1. SOLDA LİSTELENEN SORULARI BİR DAHA SORMA (TEK HECEDEN AYNI OLSUN)\n`;
+          result += `2. HER ZAMAN TAMAMEN YENİ VE FARKLI SORULAR ÜRETİN\n`;
+          result += `3. SONRAKİ SORU BÜYÜK FARK TAŞIMALI\n`;
+          result += `4. HAVUZ SORULARININ RUH/TONU'NDA İSE BİLE AYNI AÇIDAN SORMA! FARKLI AÇIDAN YAKLAŞ.\n`;
+          result += `5. ÖNCEKİ SORULARIN RUHGÜSÜ DE DEĞIŞMELIDIR (TEMA/AKLISAL ALAN FARKLI OLACAK)\n`;
+          result += `6. EĞER HAVUZ SORULARINI GÖRDÜYSEN, ONLARDAN TAMAMEN FARKLI YENİ SORULAR YARATACAKSIN\n\n`;
+        }
+        
+        // Intro aşamasında ek uyarı
+        if (stage === "intro" && asked.length > 0) {
+          result += `⚠️  GİRİŞ AŞAMASI ÖZELLİĞİ ⚠️\n`;
+          result += `Bu aşamada SADECE birbirinden tamamen farklı tantşma soruları sor.\n`;
+          result += `Örnek fark:\n`;
+          result += `- "Kendinizden bahseder misin?" ≠ "Boş vaktinde ne yaparsın?"\n`;
+          result += `- "Neden bu pozisyon?" ≠ "Hangi becerileriniz ön plana çıkıyor?"\n\n`;
+        }
+        
+        return result;
+      }
+
+      function detectLanguageHint(text) {
+        const trChars = /[çğıöşüİ]/i;
+        if (trChars.test(text)) return "tr";
+        const letters = (text.match(/[a-z]/gi) || []).length;
+        const spaces = (text.match(/\s/g) || []).length;
+        if (letters > 20 && spaces > 2) return "en";
+        return lastUserLanguageHint || "tr";
+      }
+
+      function updateModeBadge() {
+        if (!modeBadge) return;
+        if (degradedMode) {
+          modeBadge.style.display = "inline-flex";
+          modeBadge.textContent = "AI: Offline (Quota)";
+        } else {
+          modeBadge.style.display = "inline-flex";
+          modeBadge.textContent = "AI: Online";
+        }
+      }
+
+      function isQuotaError(err) {
+        const msg = String(err?.message || err || "").toLowerCase();
+        return msg.includes("429") || msg.includes("quota") || msg.includes("rate limit");
+      }
+
+      // Yerel fallback soruları - degradedMode sırasında kullanıldı
+      const localFallbackQuestions = {
+        intro: [
+          "Kendinden kısaca bahseder misin? Eğitim geçmişin ve iş deneyimin nelerdir?",
+          "Boş zamanlarında kendini nasıl geliştiriyorsun? Hobilerinden bahseder misin?",
+          "Şu an yaşamında en önemli hedefin ne? Bunu başarmak için neler yapıyorsun?",
+          "Bir rol model ya da ilham aldığın kişi var mı? Neden?",
+          "İdeal bir çalışma ortamında neler yer alır? Hangi özellikleri arayıssın?",
+          "Yeni bir ekibe katılırken ilk adımlarına neler olur?",
+          "Kontrol edemediğin bir durumla nasıl başa çıkıyorsun?",
+          "Geçtiğin zorlukları anlatır mısın? Onları nasıl aştın?"
+        ],
+        technical: [
+          "Yazılan kodun kalitesini nasıl değerlendirirsin? Metrikleriniz nelerdir?",
+          "Bir tasarım sorununuz ortaya çıktığında nasıl çözersiniz?",
+          "Teknik borç nedir ve bunu nasıl yönetirsin?",
+          "Hızlı değişen teknolojilerden haberdar olmak için ne yapıyorsun?",
+          "Bir sistem tasarlarken ilk olarak neyi düşünürsün?",
+          "Karşı karşıya geldiğin zor bir teknik problemi anlatır mısın?",
+          "Performance iyileştirmesi yapma süreci nasıl işler?",
+          "Kod review hakkındaki görüşün nedir?",
+          "Test süreci hakkında neler biliyorsun?",
+          "Eski kodlarla çalışmanın zorlukları nelerdir?",
+          "Versiyon kontrolü ve branching stratejileri hakkında neler biliyorsun?",
+          "İşbirliği yaparken hangi araçları tercih edersin?"
+        ],
+        closing: [
+          "Stres altında bulunduğun bir durumu anlatır mısın? Nasıl yönettin?",
+          "Ekip içinde fikir ayrılığın oldu mu? Bunu nasıl çözdün?",
+          "Başarısız bir projeyi anlatır mısın? Ondan ne öğrendin?",
+          "Meslektaşın yardıma ihtiyacı olduğunda nasıl bir yaklaşım izlersin?",
+          "Liderlik potansiyeline dair bir örnek verebilir misin?",
+          "5 yıl sonra kendini nerede görmek istiyorsun?",
+          "İşini gerçekten sevdiğini gösteren bir anı paylaş.",
+          "Başarısızlıktan kurtulup yeniden başladığın bir örneği anlatır mısın?",
+          "Hatalı bir karar aldığın bir olayı paylaş. Nasıl düzelttin?",
+          "İdeal bir çalışma ortamında neler yer alır?"
+        ]
+      };
+
+      // Yerel soruları track etmek için Set'ler
+      const usedLocalQuestions = {
+        intro: new Set(),
+        technical: new Set(),
+        closing: new Set()
+      };
+
+      function localQuestionFor(stageId) {
+        const fallbacks = localFallbackQuestions[stageId] || localFallbackQuestions.technical;
+        
+        // Kullanılmamış soruları filtrele
+        const available = fallbacks.filter((q) => !usedLocalQuestions[stageId].has(q));
+        
+        let selected = null;
+        
+        if (available.length > 0) {
+          // Rastgele seç
+          selected = available[Math.floor(Math.random() * available.length)];
+        } else {
+          // Tüm sorular kullanıldıysa, set'i sıfırla ve yeniden başla
+          usedLocalQuestions[stageId].clear();
+          selected = fallbacks[Math.floor(Math.random() * fallbacks.length)];
+        }
+        
+        // Seçilen soruyu track et
+        if (selected) {
+          usedLocalQuestions[stageId].add(selected);
+        }
+        
+        return selected || "Bu konuda sen ne düşünüyorsun? Detaylı bir cevap verebilir misin?";
+      }
+
+      function localAnalysisFallback() {
+        return JSON.stringify({
+          strengths: [
+            { point: "Yanıtlarında yapı kurma ve iletişim netliği görülüyor.", evidence: ["A1"] },
+            { point: "Problem çözme yaklaşımın örneklerle desteklenmiş.", evidence: ["A2"] },
+          ],
+          growthAreas: [
+            { point: "Sonuç metriklerini (etki/ölçüm) daha net ifade et.", evidence: ["A2"] },
+            { point: "Teknik/iş kararlarında trade-off vurgusunu artır.", evidence: ["A3"] },
+          ],
+          industryTips: [
+            "STAR formatını kullan: Situation, Task, Action, Result.",
+            "Yanıtlarda ölçülebilir etki (%, süre, maliyet) belirt.",
+            "Kararlarında alternatifleri ve neden seçmediğini kısaca açıkla.",
+          ],
+        });
+      }
+
+      async function requestGeminiWithFallback(userPrompt, generationConfig = {}, systemInstruction = null) {
+        if (!API_KEY || API_KEY === "" || API_KEY.includes("BURAYA")) {
+          throw new Error("API anahtarı girilmedi.");
+        }
+
+        const finalSystemInstruction = systemInstruction || SYSTEM_INSTRUCTION;
+
+        const body = {
+          contents: [
+            {
+              role: "user",
+              parts: [
+                {
+                  text:
+                    `[Sistem Talimatı]\n${finalSystemInstruction}\n\n` +
+                    `[Kullanıcı İsteği]\n${userPrompt}`,
+                },
+              ],
+            },
+          ],
+          generationConfig: {
+            temperature: 0.6,
+            maxOutputTokens: 500,
+            ...generationConfig,
+          },
+        };
+
+        let lastError = null;
+
+        for (const model of GEMINI_MODELS) {
+          // Çok sık istek atmayı engelle (429 riskini azaltır) - 429 hatalarını önlemek için artırıldı
+          const now = Date.now();
+          const minGapMs = 2000; // 500ms → 2000ms: API rate limit'ine daha fazla saygı göster
+          const waitMs = Math.max(0, minGapMs - (now - lastGeminiCallAt));
+          if (waitMs > 0) await sleep(waitMs);
+
+          const endpoint = `https://generativelanguage.googleapis.com/v1/models/${model}:generateContent?key=${encodeURIComponent(
+            API_KEY
+          )}`;
+          try {
+            let res = null;
+            // 429 için agresif retry/backoff (quota hatası için)
+            for (let attempt = 0; attempt < 5; attempt += 1) {
+              lastGeminiCallAt = Date.now();
+              res = await fetch(endpoint, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(body),
+              });
+
+              if (res.status !== 429) break;
+
+              const retryAfter = Number(res.headers.get("retry-after") || 0);
+              // Exponential backoff: 2000ms → 4000ms → 8000ms → 16000ms → 32000ms
+              const backoffMs = retryAfter > 0 ? retryAfter * 1000 : Math.pow(2, attempt + 1) * 1000;
+              console.warn(`429 Quota error. Retrying after ${backoffMs}ms (attempt ${attempt + 1}/5)`);
+              await sleep(backoffMs);
+            }
+
+            if (!res.ok) {
+              const errText = await res.text().catch(() => "");
+              // 404 ise bir sonraki modele düş.
+              if (res.status === 404) {
+                lastError = new Error(`Model bulunamadı (${model}).`);
+                continue;
+              }
+              if (res.status === 429) {
+                lastError = new Error("Quota dolu veya çok sık istek atıldı (429). 1-2 dakika sonra tekrar dene.");
+                continue;
+              }
+              throw new Error(`HTTP Hata: ${res.status}${errText ? ` - ${errText}` : ""}`);
+            }
+
+            const data = await res.json();
+            const text =
+              data?.candidates?.[0]?.content?.parts?.map((p) => p.text).filter(Boolean).join("\n") || "";
+            if (!text.trim()) throw new Error("Gemini yanıtı boş döndü.");
+            return text.trim();
+          } catch (err) {
+            lastError = err;
+          }
+        }
+
+        throw lastError || new Error("Gemini isteği başarısız.");
+      }
+
+      async function geminiGenerate({ mode, forcedQuestion }) {
+        let userPrompt = "";
+        if (mode === "ask") {
+          if (degradedMode) return forcedQuestion || localQuestionFor(getCurrentStageId());
+          userPrompt = forcedQuestion
+            ? `Bir sonraki çıktında SADECE şu soruyu sor: "${forcedQuestion}"`
+            : `${buildContextSummary()}Adaya sadece 1 tane profesyonel mülakat sorusu sor.`;
+          try {
+            return await requestGeminiWithFallback(userPrompt, { temperature: 0.7, maxOutputTokens: 180 });
+          } catch (err) {
+            if (isQuotaError(err)) {
+              degradedMode = true;
+              updateModeBadge();
+              return forcedQuestion || localQuestionFor(getCurrentStageId());
+            }
+            throw err;
+          }
+        }
+
+        // analyze
+        const qaIndex =
+          asked.length > 0
+            ? asked
+                .map((q, i) => {
+                  const qid = q.id || `Q${i + 1}`;
+                  const a = answers.find((x) => x.questionId === qid);
+                  const sourceLabel = q.source === "Pool" ? "[HAVUZ SORULARI]" : "[✨ AI TARAFINDAN ÜRETİLEN]";
+                  return `${sourceLabel} ${qid}: ${q.text}\n${a?.id || "-"}: ${a?.text || "-"}`;
+                })
+                .join("\n\n")
+            : "-";
+
+        const analysisSystemInstruction = `
+🔴 SEN BİR İK GÖZLEMCI VE KRİTİK ANALISTSİN 🔴
+Görevin: Aday cevaplarını SORU-CEVAP İLİŞKİSİ AÇISINDAN analiz etmek.
+
+KURAL #1 - SORU-CEVAP UYUMU: Cevap DOĞRUDAN SORULAN TEMASINI ele alıyor mu?
+KURAL #2 - ALAKASIZ CEVAPLAR: Eğer cevap soruyla hiçbir ilgisi yoksa relationshipIssues'a ekle.
+KURAL #3 - BOŞLUK CEVAPLARI: Eğer cevap çok kısa/anlamsız ise uyarı ekle.
+KURAL #4 - JSON SCHEMA: relationshipIssues MUTLAKA doldurulmalı.
+
+FEEDBACK TÜRLERİ:
+🟢 STRENGTH (Olumlu)
+🟡 GROWTH (Gelişim)
+🔴 RELATIONSHIP ISSUE (İlişkisiz)
+
+JSON ÖRNEK:
+{"strengths":[{"point":"...","detail":"...","evidence":["A1"]}],"growthAreas":[],"relationshipIssues":[],"industryTips":[]}
+`;
+
+userPrompt = `
+🔴 ÖNEMLİ: SORU-CEVAP UYUMUNU İLK OLARAK KONTROL ET 🔴
+JSON FORMATINDA YANIT VER:
+{
+  "strengths": [{"point": "...", "detail": "...", "evidence": ["A1"]}],
+  "growthAreas": [{"point": "...", "detail": "...", "example": "...", "evidence": ["A2"]}],
+  "relationshipIssues": [{"answerId": "A1", "question": "...", "issue": "..."}],
+  "industryTips": ["..."]
+}
+
+SORU-CEVAP ÇİFTLERİ:
+${asked.map((q, idx) => {
+  const a = answers.find((x) => x.questionId === q.id);
+  const qid = q.id || `Q${idx + 1}`;
+  const aid = a?.id || "?";
+  return `${qid}: "${q.text}"\n► ${aid}: "${a?.text || '(CEVAP YOK)'}"\n---\n`;
+}).join("")}
+`;
+
+        if (degradedMode) return localAnalysisFallback();
+        try {
+          return await requestGeminiWithFallback(userPrompt, { temperature: 0.4, maxOutputTokens: 700 }, analysisSystemInstruction);
+        } catch (err) {
+          if (isQuotaError(err)) {
+            degradedMode = true;
+            updateModeBadge();
+            return localAnalysisFallback();
+          }
+          throw err;
+        }
+      }
+
+      // Lokal hızlı soru filtreleme - Gemini API çağrısı YOK!
+      function localFilterPoolQuestion(question) {
+        // Basit lokal kontrol - hızlı ve etkili
+        if (!question || typeof question !== "string") return { ok: false, reason: "EMPTY" };
+        
+        const q = String(question).toLowerCase().trim();
+        if (q.length < 10) return { ok: false, reason: "TOO_SHORT" };
+        if (q.length > 500) return { ok: false, reason: "TOO_LONG" };
+        
+        // Küfür/profanite basit kontrol
+        const badwords = /fuck|shit|damn|crap|bitch|asshole|porno|sex/i;
+        if (badwords.test(q)) return { ok: false, reason: "PROFANITY" };
+        
+        // Soru işareti veya soru cümle yapısı kontrolü
+        const isQuestion = /[?]|^(nasıl|nedir|ne\s|kim|hangi|kaç|neden|neye |hangi\s)/i.test(q);
+        if (!isQuestion) return { ok: false, reason: "NOT_A_QUESTION" };
+        
+        return { ok: true, reason: "OK" };
+      }
+      
+      async function geminiFilterPoolQuestion({ question, payload, stageId }) {
+        // Öncelikle lokal filtrele (çok hızlı)
+        const localResult = localFilterPoolQuestion(question);
+        if (!localResult.ok) return localResult;
+        
+        // Lokal pass ise direkt dön - Gemini çağrısı YAPMA!
+        return { ok: true, reason: "LOCAL_PASS" };
+      }
+      function getCurrentStageId() {
+        return STAGES[stageIndex]?.id || "technical";
+      }
+
+      function advanceStageIfNeeded() {
+        // Bu fonksiyon, hedef soru sayısı dolunca otomatik bir sonraki aşamaya geçer.
+        const stage = STAGES[stageIndex];
+        if (!stage) return;
+        const askedCount = stageAskedCount[stage.id] || 0;
+        if (askedCount >= stage.targetQuestions && stageIndex < STAGES.length - 1) {
+          stageIndex += 1;
+          setStageUI();
+        }
+      }
+
+      function nextPoolQuestionForStage(stageId) {
+        // TÜM aşamalarda pool sorularını kullan (intro dahil)
+        // %50-%50 mixer için pool sorularına erişim sağla
+        
+        // Önce mevcut pool'u kontrol et
+        if (!poolQueue || poolQueue.length === 0) {
+          console.warn("⚠️ Pool boş - topluluk sorularından yeniden okuyor...");
+          // Pool boşsa community_questions'tan yeniden oku
+          const freshPool = readCommunityPool();
+          if (freshPool && freshPool.length > 0) {
+            for (const q of freshPool) {
+              poolQueue.push({ stage: inferStage(q), question: q.question });
+            }
+            console.log(`✅ Pool yenilendi: ${poolQueue.length} soru eklendi`);
+          }
+        }
+        
+        // Normalize edilmiş önceki soruları kontrol et
+        const stageQuestions = poolQueue.filter((q) => {
+          const questionNorm = normalizeQuestion(q.question);
+          // Eğer normalize boşsa veya daha önce sorulduysa, atla
+          if (!questionNorm) return false;
+          const isDuplicate = askedQuestionNormalized.has(questionNorm);
+          if (isDuplicate) {
+            console.log(`📋 Duplicate atlandı: "${q.question.substring(0, 40)}..."`);
+          }
+          return q.stage === stageId && !isDuplicate;
+        });
+        
+        if (stageQuestions.length > 0) {
+          // Rastgele bir soru seç
+          const randomIdx = Math.floor(Math.random() * stageQuestions.length);
+          const selected = stageQuestions[randomIdx];
+          
+          // Seçilen soruyu normalize et ve kaydı tutmak için ekle
+          const norm = normalizeQuestion(selected.question);
+          if (norm) {
+            askedQuestionNormalized.add(norm);
+            console.log(`✅ Pool Sorusu: "${selected.question.substring(0, 50)}..." (Stage: ${stageId})`);
+          }
+          
+          // Seçilen soruyu poolQueue'den çıkar (tekrar seçilmesin)
+          const actualIdx = poolQueue.findIndex(q => q === selected);
+          if (actualIdx !== -1) {
+            poolQueue.splice(actualIdx, 1);
+          }
+          
+          return selected.question;
+        }
+        
+        console.warn(`⚠️ Aşama ${stageId} için uygun pool sorusu bulunamadı`);
+        return null;
+      }
+
+      async function askNextQuestion() {
+        if (interviewFinished) return;
+
+        advanceStageIfNeeded();
+        const stageId = getCurrentStageId();
+
+        subStatus.textContent = "Soru hazırlanıyor…";
+        sendBtn.disabled = true;
+        finishBtn.disabled = true;
+        finishTopBtn.disabled = true;
+
+        try {
+          if (degradedMode && !degradedNoticeShown) {
+            degradedNoticeShown = true;
+            showToast("Gemini kotası dolu. Yerel soru havuzundan devam ediliyor.", { error: false });
+          }
+
+          // DegradedMode'da: Hep pool'dan soru sor (available ise) + fallback yerel soruları kullan
+          // Normal Mode'da: Pool ve AI'yı KARIŞTıRAN MANTIK (%50-%50)
+          
+          let question = null;
+          let source = null;
+
+          if (degradedMode) {
+            // DegradedMode: Pool'dan sor VEYA yerel fallback
+            const hasPoolQuestions = poolQueue.some((q) => q.stage === stageId);
+            if (hasPoolQuestions) {
+              const poolQuestion = nextPoolQuestionForStage(stageId);
+              if (poolQuestion) {
+                const filterResult = await geminiFilterPoolQuestion({
+                  question: poolQuestion,
+                  payload: startPayload,
+                  stageId,
+                });
+
+                if (filterResult.ok) {
+                  question = poolQuestion;
+                  source = "Pool";
+                } else {
+                  // Pool soru uygunsuğuzsa yerel fallback
+                  question = localQuestionFor(stageId);
+                  source = "Local";
+                }
+              } else {
+                // Pool'dan soru alınamadıysa yerel fallback
+                question = localQuestionFor(stageId);
+                source = "Local";
+              }
+            } else {
+              // Pool boşsa yerel fallback
+              question = localQuestionFor(stageId);
+              source = "Local";
+            }
+          } else {
+            // Normal Mode: POOL ve AI'yı KARIŞTıRAN MANTIK
+            // %50 şansla pool'dan, %50 şansla AI'dan soru seç
+            const usePool = Math.random() < 0.5; // %50 pool, %50 AI
+            const hasPoolQuestions = poolQueue.some((q) => q.stage === stageId);
+            
+            // Seçenek 1: Pool'dan sor (%50 şans VE pool sorular var)
+            if (usePool && hasPoolQuestions) {
+              const poolQuestion = nextPoolQuestionForStage(stageId);
+              if (poolQuestion) {
+                // Pool sorusunu filtrele
+                const filterResult = await geminiFilterPoolQuestion({
+                  question: poolQuestion,
+                  payload: startPayload,
+                  stageId,
+                });
+
+                if (filterResult.ok) {
+                  question = poolQuestion;
+                  source = "Pool";
+                } else {
+                  // Pool soru uygunsuzsa AI'dan al
+                  question = await generateUniqueAIQuestion(stageId);
+                  source = "AI";
+                }
+              } else {
+                // Pool'dan soru alınamadıysa AI'dan
+                question = await generateUniqueAIQuestion(stageId);
+                source = "AI";
+              }
+            } else {
+              // Seçenek 2: AI'dan sor (%50 şans VEYA pool sorusu yok)
+              question = await generateUniqueAIQuestion(stageId);
+              source = "AI";
+            }
+          }
+
+          // Fallback: sorusu yoksa yerel fallback soru döndür
+          if (!question) {
+            question = localQuestionFor(stageId);
+            source = "Local";
+          }
+
+          // Soruyu kayıt altına al ve göster
+          if (question) {
+            const qid = `Q${asked.length + 1}`;
+            lastQuestionId = qid;
+
+            asked.push({ id: qid, text: question, stage: stageId, source: source, ts: new Date().toISOString() });
+            sources.push(source);
+            stageAskedCount[stageId] = (stageAskedCount[stageId] || 0) + 1;
+
+            // Soru öncesi transition mesajı ekle (ilk soru değilse)
+            if (asked.length > 1) {
+              const transMsg = getRandomTransitionMessage();
+              addAiMessageTyping({
+                text: transMsg,
+                metaTags: [],
+              });
+            }
+            askedQuestionsCount++;
+
+            addAiMessageTyping({
+              text: question,
+              idLabel: qid,
+              metaTags: [
+                { kind: "ai", text: qid },
+                { kind: "stage", text: stageTitle(stageId) },
+              ],
+            });
+
+            subStatus.textContent = "Yanıtını bekliyor…";
+          } else {
+            throw new Error("Soru üretilemeedi. Lütfen sayfayı yenileyip tekrar deneyin.");
+          }
+        } catch (err) {
+          console.error("Soru üretme hatası:", err);
+          showToast(String(err?.message || err), { error: true });
+          subStatus.textContent = "Hata: " + (String(err?.message || "Soru alınamadı").substring(0, 40));
+        } finally {
+          sendBtn.disabled = false;
+          finishBtn.disabled = false;
+          finishTopBtn.disabled = false;
+          answerEl.focus();
+        }
+      }
+
+      // Yardımcı fonksiyon: Unique (tekrarlanmayan) AI sorusu üret (OPTIMIZED - hızlı)
+      async function generateUniqueAIQuestion(stageId) {
+        try {
+          // DegradedMode'da local sorular kullan (pool'dan)
+          if (degradedMode) {
+            const localQ = localQuestionFor(stageId);
+            return localQ;
+          }
+          
+          const maxRetry = 3; // Duplicate kontrol için 3 deneme
+          let aiQuestion = null;
+          let retryCount = 0;
+          
+          // İlk denemesinden başlayarak, duplicate bulunca retry yap
+          for (let attempt = 0; attempt <= maxRetry; attempt++) {
+            aiQuestion = await geminiGenerate({ mode: "ask" });
+            
+            if (!aiQuestion || !aiQuestion.trim()) {
+              console.warn(`🔴 AI Soru Boş (Attempt ${attempt + 1}/${maxRetry + 1})`);
+              if (attempt === maxRetry) {
+                return localQuestionFor(stageId);
+              }
+              continue;
+            }
+            
+            const normAi = normalizeQuestion(aiQuestion);
+            
+            // Duplicate kontrol
+            if (normAi && askedQuestionNormalized.has(normAi)) {
+              console.log(`🔄 Duplicate bulundu, retry... (Attempt ${attempt + 1}/${maxRetry + 1}): "${aiQuestion.substring(0, 40)}..."`);
+              if (attempt === maxRetry) {
+                // Son denemeydi, fallback ver
+                return localQuestionFor(stageId);
+              }
+              continue; // Bir sonraki attempt'e geç
+            }
+            
+            // Unique soru bulundu!
+            if (normAi) {
+              askedQuestionNormalized.add(normAi);
+              console.log(`✅ AI Sorusu (Attempt ${attempt + 1}): "${aiQuestion.substring(0, 50)}..."`);
+            }
+            
+            return aiQuestion;
+          }
+          
+          // Fallback: hiçbir şey çalışmazsa yerel soru
+          return localQuestionFor(stageId);
+        } catch (err) {
+          console.error("❌ AI soru üretme hatası:", err);
+          // Hata durumunda yerel fallback soru döndür
+          return localQuestionFor(stageId);
+        }
+      }
+
+      async function startInterview() {
+        setStageUI();
+
+        if (!startPayload) {
+          addAiMessageTyping({
+            text:
+              "Seçim bilgilerini bulamadım. Lütfen önce ana sayfadan şirket, pozisyon ve deneyim seviyesini seçerek gel.",
+            metaTags: [{ kind: "ai", text: "AI" }],
+          });
+          subStatus.textContent = "Başlatılamadı.";
+          sendBtn.disabled = true;
+          finishBtn.disabled = true;
+          finishTopBtn.disabled = true;
+          return;
+        }
+
+        try {
+          // Karşılama mesajı (giriş / tanışma atmosferi)
+          addAiMessageTyping({
+            text:
+              `Merhaba, ben InterviewHub'daki mülakatçın. ` +
+              `${startPayload.company} için ${startPayload.position} (${humanizeLevel(startPayload.level)}) hazırlığı yapacağız. ` +
+              `Hazırsan başlayalım.`,
+            metaTags: [{ kind: "ai", text: "AI" }],
+          });
+
+          // İlk soru
+          await askNextQuestion();
+        } catch (err) {
+          console.error("Simülasyon akışında hata:", err);
+          showToast(String(err?.message || "Bir hata oluştu. Tekrar deneyin."), { error: true });
+          subStatus.textContent = "Hata: Sayfayı yenileyip tekrar deneyin.";
+          sendBtn.disabled = false;
+          finishBtn.disabled = false;
+          finishTopBtn.disabled = false;
+        }
+      }
+
+      function renderReportSkeleton() {
+        reportSub.textContent = `${startPayload?.company || "-"} • ${startPayload?.position || "-"} • ${humanizeLevel(
+          startPayload?.level
+        )}`;
+        reportStrengths.innerHTML = "";
+        reportGrowth.innerHTML = "";
+        reportIndustryTips.innerHTML = "";
+        reportQuestions.innerHTML = "";
+
+        // Soruları report Questions bölümüne ekle - her soru ayrı card
+        // (Feedback'ler daha sonra eklenecek after gemini response)
+      }
+
+      async function finishInterview() {
+        if (interviewFinished) return;
+        interviewFinished = true;
+
+        sendBtn.disabled = true;
+        finishBtn.disabled = true;
+        finishTopBtn.disabled = true;
+        answerEl.disabled = true;
+        subStatus.textContent = "Rapor hazırlanıyor…";
+
+        overlay.classList.add("show");
+        renderReportSkeleton();
+
+        try {
+          // Kullanıcının dili için ipucu (son kullanıcı mesajına göre).
+          const lastUser = [...transcript].reverse().find((m) => m.role === "user");
+          if (lastUser?.text) lastUserLanguageHint = detectLanguageHint(lastUser.text);
+
+          const raw = await geminiGenerate({ mode: "analyze" });
+          const parsed = safeJsonParse(raw);
+
+          const fallback = {
+            strengths: [],
+            growthAreas: [],
+            industryTips: [],
+            rawText: raw,
+          };
+
+          const analysis = parsed && typeof parsed === "object" ? parsed : fallback;
+
+          const strengths = Array.isArray(analysis.strengths) ? analysis.strengths : [];
+          const growthAreas = Array.isArray(analysis.growthAreas) ? analysis.growthAreas : [];
+          const relationshipIssuesFromAnalysis = Array.isArray(analysis.relationshipIssues) ? analysis.relationshipIssues : [];
+          const industryTips = Array.isArray(analysis.industryTips) ? analysis.industryTips : [];
+          
+          // Global relationshipIssues state'ine kaydet (rapor render'ı için)
+          relationshipIssues = relationshipIssuesFromAnalysis;
+
+          function normalizeEvidence(ev) {
+            const arr = Array.isArray(ev) ? ev : [];
+            return arr
+              .map((x) => String(x || "").trim())
+              .filter(Boolean)
+              .filter((x) => /^A\d+$/i.test(x))
+              .map((x) => x.toUpperCase())
+              .slice(0, 6);
+          }
+
+          // ============ YENİ: HER SORU İÇİN INLINE FEEDBACK ============
+          // Soruları ve feedback'lerini QuestionFeedback Container'ında göster
+          
+          // İlişkisiz cevapları en başta (uyarı olarak)
+          if (relationshipIssuesFromAnalysis && relationshipIssuesFromAnalysis.length > 0) {
+            const issueDiv = document.createElement("div");
+            issueDiv.style.padding = "12px";
+            issueDiv.style.marginBottom = "16px";
+            issueDiv.style.backgroundColor = "#fff3e0";
+            issueDiv.style.borderLeft = "3px solid #f57c00";
+            issueDiv.style.borderRadius = "4px";
+            issueDiv.style.fontSize = "12px";
+            issueDiv.style.color = "#e65100";
+            issueDiv.innerHTML = `<strong>⚠️ ${relationshipIssuesFromAnalysis.length} adet konudan bağımsız cevap tespit edildi</strong><br><span style="font-size: 11px; opacity: 0.9; display: block; margin-top: 4px;">Bu cevaplar soru temasıyla ilgisiz ve mülakat performansınızı yansıtmamaktadır.</span>`;
+            reportQuestions.appendChild(issueDiv);
+          }
+          
+          // Her soru için CARD oluştur - soru + cevap + feedback
+          for (let qIdx = 0; qIdx < asked.length; qIdx++) {
+            const q = asked[qIdx];
+            const a = answers.find((x) => x.questionId === q.id);
+            
+            const card = document.createElement("div");
+            card.style.padding = "14px";
+            card.style.marginBottom = "12px";
+            card.style.backgroundColor = "var(--card)";
+            card.style.borderRadius = "6px";
+            card.style.border = "1px solid var(--border)";
+            
+            // Soru başlığı + source badge (küçük)
+            const header = document.createElement("div");
+            header.style.display = "flex";
+            header.style.justifyContent = "space-between";
+            header.style.alignItems = "center";
+            header.style.marginBottom = "8px";
+            
+            const qLabel = document.createElement("span");
+            qLabel.style.fontWeight = "600";
+            qLabel.style.fontSize = "13px";
+            qLabel.textContent = `${q.id}`;
+            
+            const sourceBadge = document.createElement("span");
+            sourceBadge.style.fontSize = "11px";
+            sourceBadge.style.padding = "2px 6px";
+            sourceBadge.style.borderRadius = "3px";
+            sourceBadge.style.backgroundColor = q.source === "Pool" ? "rgba(76, 175, 80, 0.15)" : "rgba(109, 94, 252, 0.15)";
+            sourceBadge.style.color = q.source === "Pool" ? "#2e7d32" : "#6d5efc";
+            sourceBadge.textContent = q.source === "Pool" ? "📋 Havuz" : "✨ AI";
+            
+            header.appendChild(qLabel);
+            header.appendChild(sourceBadge);
+            card.appendChild(header);
+            
+            // Soru metni
+            const qTextDiv = document.createElement("div");
+            qTextDiv.style.fontSize = "13px";
+            qTextDiv.style.marginBottom = "8px";
+            qTextDiv.style.lineHeight = "1.5";
+            qTextDiv.textContent = q.text;
+            card.appendChild(qTextDiv);
+            
+            // Cevap (kısa)
+            if (a) {
+              const answerDiv = document.createElement("div");
+              answerDiv.style.fontSize = "12px";
+              answerDiv.style.padding = "8px 10px";
+              answerDiv.style.marginBottom = "8px";
+              answerDiv.style.backgroundColor = "rgba(0,0,0,0.03)";
+              answerDiv.style.borderRadius = "4px";
+              answerDiv.style.color = "var(--muted)";
+              answerDiv.style.fontStyle = "italic";
+              answerDiv.style.borderLeft = "2px solid var(--border)";
+              
+              const answerText = (a.text || "").trim().substring(0, 200);
+              answerDiv.textContent = `"${answerText}${answerText.length > 199 ? '...' : ''}"`;
+              card.appendChild(answerDiv);
+            }
+            
+            // Feedback (strength/growth) - qIdx'e göre eşle
+            const strengthForQ = strengths.find((s) => {
+              const ev = s && s.evidence ? normalizeEvidence(s.evidence) : [];
+              return ev.some((aid) => aid === `A${qIdx + 1}`);
+            });
+            
+            const growthForQ = growthAreas.find((g) => {
+              const ev = g && g.evidence ? normalizeEvidence(g.evidence) : [];
+              return ev.some((aid) => aid === `A${qIdx + 1}`);
+            });
+            
+            const feedbackDiv = document.createElement("div");
+            feedbackDiv.style.fontSize = "12px";
+            feedbackDiv.style.lineHeight = "1.6";
+            
+            if (strengthForQ) {
+              const fb = document.createElement("div");
+              fb.style.marginBottom = "6px";
+              fb.style.paddingBottom = "6px";
+              fb.style.borderBottom = "1px solid var(--border)";
+              
+              const point = document.createElement("div");
+              point.style.color = "#4caf50";
+              point.style.fontWeight = "600";
+              point.innerHTML = `✅ <strong>${strengthForQ.point}</strong>`;
+              fb.appendChild(point);
+              
+              if (strengthForQ.detail) {
+                const detail = document.createElement("div");
+                detail.style.marginTop = "4px";
+                detail.style.color = "var(--muted)";
+                detail.style.fontSize = "11px";
+                detail.textContent = strengthForQ.detail;
+                fb.appendChild(detail);
+              }
+              feedbackDiv.appendChild(fb);
+            }
+            
+            if (growthForQ) {
+              const fb = document.createElement("div");
+              
+              const point = document.createElement("div");
+              point.style.color = "#ff9800";
+              point.style.fontWeight = "600";
+              point.innerHTML = `→ <strong>${growthForQ.point}</strong>`;
+              fb.appendChild(point);
+              
+              if (growthForQ.detail) {
+                const detail = document.createElement("div");
+                detail.style.marginTop = "4px";
+                detail.style.color = "var(--muted)";
+                detail.style.fontSize = "11px";
+                detail.textContent = growthForQ.detail;
+                fb.appendChild(detail);
+              }
+              
+              if (growthForQ.example) {
+                const ex = document.createElement("div");
+                ex.style.marginTop = "6px";
+                ex.style.padding = "6px 8px";
+                ex.style.backgroundColor = "rgba(109, 94, 252, 0.08)";
+                ex.style.borderRadius = "3px";
+                ex.style.color = "var(--fg)";
+                ex.style.fontSize = "11px";
+                ex.innerHTML = `<strong>💡 Örnek:</strong> ${growthForQ.example}`;
+                fb.appendChild(ex);
+              }
+              feedbackDiv.appendChild(fb);
+            }
+            
+            if (!strengthForQ && !growthForQ) {
+              feedbackDiv.style.color = "var(--muted)";
+              feedbackDiv.style.fontSize = "11px";
+              feedbackDiv.textContent = "(Feedback bulunamadı)";
+            }
+            
+            card.appendChild(feedbackDiv);
+            reportQuestions.appendChild(card);
+          }
+          
+          // Sektör İpuçları (ayrı bölümde göster)
+          // Not: Güçlü Yönler ve Gelişim Alanları her sorunun yanında gösterilmektedir
+          // (reportStrengths/reportGrowth gösterim yok - sadece her card'da inline feedback)
+          
+          // Sektör İpuçları (inline, her sorunun yanında görülüyor)  
+          if (industryTips && industryTips.length > 0) {
+            reportIndustryTips.innerHTML = industryTips.slice(0, 5).map((tip) => `<li style="font-size: 13px;">${tip}</li>`).join("");
+          } else {
+            reportIndustryTips.innerHTML = "<li style='opacity: 0.7; font-size: 12px;'>İpucu bulunamadı.</li>";
+          }
+          
+          // Strengths ve Growth Areas (her sorunun yanında inline gösterildiği için bu bölümleri temizle)
+          reportStrengths.innerHTML = "";
+          reportGrowth.innerHTML = "";
+
+          // Rapor JSON'unu kopyalama için sakla
+          const strengthsOut = strengths
+            .map((it) =>
+              typeof it === "string"
+                ? { point: it, detail: "", evidence: [] }
+                : { 
+                    point: String(it?.point || ""), 
+                    detail: String(it?.detail || ""),
+                    evidence: normalizeEvidence(it?.evidence) 
+                  }
+            )
+            .filter((x) => x.point);
+
+          const growthOut = growthAreas
+            .map((it) =>
+              typeof it === "string"
+                ? { point: it, detail: "", example: "", evidence: [] }
+                : { 
+                    point: String(it?.point || ""), 
+                    detail: String(it?.detail || ""),
+                    example: String(it?.example || ""),
+                    evidence: normalizeEvidence(it?.evidence) 
+                  }
+            )
+            .filter((x) => x.point);
+
+          const tipsOut = industryTips.map((x) => String(x)).filter(Boolean);
+
+          overlay.dataset.analysisJson = JSON.stringify(
+            {
+              strengths: strengthsOut,
+              growthAreas: growthOut,
+              relationshipIssues: relationshipIssues.map((x) => ({
+                answerId: String(x?.answerId || ""),
+                question: String(x?.question || ""),
+                issue: String(x?.issue || "")
+              })),
+              industryTips: tipsOut,
+              questions: asked.map((q) => ({
+                id: q.id || "",
+                text: q.text,
+                stage: q.stage,
+                source: q.source,
+                sourceLabel: q.source === "Pool" 
+                  ? "Gerçek Mülakat Sorusu (Havuz)" 
+                  : "AI Tarafından Oluşturulan Soru ✨",
+              })),
+              summary: {
+                totalQuestions: asked.length,
+                aiGeneratedCount: asked.filter((q) => q.source === "AI").length,
+                poolQuestionCount: asked.filter((q) => q.source === "Pool").length,
+                relationshipIssuesCount: relationshipIssues.length,
+                note: "AI Tarafından Oluşturulan Sorular (✨): Bu projede yapaylı zeka tarafından dinamik olarak üretilen, eğitim amaçlı sorulardır."
+              }
+            },
+            null,
+            2
+          );
+
+          reportSub.textContent =
+            (lastUserLanguageHint === "en" ? "Interview complete" : "Mülakat tamamlandı") +
+            ` • ${startPayload?.company || "-"} • ${startPayload?.position || "-"}`;
+        } catch (err) {
+          const errMsg = String(err?.message || err);
+          reportStrengths.textContent = errMsg;
+          reportGrowth.textContent = lastUserLanguageHint === "en" ? "Analysis failed." : "Analiz alınamadı.";
+          reportIndustryTips.textContent =
+            lastUserLanguageHint === "en"
+              ? "Check API key and network."
+              : "API anahtarını ve bağlantıyı kontrol et.";
+          showReportToast("Analiz alınamadı. API anahtarını ve bağlantıyı kontrol et.", { error: true });
+        }
+      }
+
+      /* =============================================================
+        11) Kullanıcı etkileşimleri (gönder, bitir, klavye kısayolları)
+      ============================================================== */
+      function getAnswerText() {
+        return (answerEl.value || "").trim();
+      }
+
+      async function onSend() {
+        // Gönderme tuşu devre dışıyken (örneğin soru hazırlanırken) Enter'a basılırsa,
+        // ikinci kez soru üretmeye çalışmamak için buradan çıkarız.
+        if (sendBtn.disabled) return;
+
+        if (interviewFinished) {
+          // Kullanıcı mülakat bittikten sonra tekrar yazmaya çalışırsa:
+          showToast("Mülakat tamamlandı. Rapor panelini kapatıp yeni bir simülasyon başlatabilirsiniz.", {
+            error: true,
+          });
+          return;
+        }
+        hideToast();
+
+        const text = getAnswerText();
+        if (!text) {
+          showToast("Yanıt boş olamaz.", { error: true });
+          return;
+        }
+
+        lastUserLanguageHint = detectLanguageHint(text);
+
+        // Kullanıcı yanıtlarını A1, A2... şeklinde indeksle.
+        const aid = `A${answerCounter + 1}`;
+        answerCounter += 1;
+
+        // Son soruya bağla (kanıtlı rapor için).
+        const qid = lastQuestionId || asked[asked.length - 1]?.id || null;
+        answers.push({ id: aid, questionId: qid, text, ts: new Date().toISOString() });
+
+        addMessage({ role: "user", text, idLabel: aid, metaTags: [{ kind: "ai", text: aid }] });
+        answerEl.value = "";
+
+        // Kullanıcı yanıtından sonra sıradaki soruya geç.
+        // (MVP) Adayın yanıtına göre "adaptif" soru üretimini Gemini zaten kendi bağlamında yapar.
+        await askNextQuestion();
+
+        // Tüm aşamalarda hedef sayılar dolduysa otomatik bitir.
+        const totalTarget = STAGES.reduce((sum, s) => sum + s.targetQuestions, 0);
+        if (asked.length >= totalTarget) {
+          await finishInterview();
+        }
+      }
+
+      /* =============================================================
+        11) İsimli Olaylar (Tek Kere)
+      ============================================================== */
+      sendBtn.addEventListener("click", onSend);
+      finishBtn.addEventListener("click", finishInterview);
+      finishTopBtn.addEventListener("click", finishInterview);
+
+      answerEl.addEventListener("keydown", (e) => {
+        // Enter: gönder, Shift+Enter: yeni satır
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
+          onSend();
+        }
+      });
+
+      if (closeReportBtn) {
+        closeReportBtn.addEventListener("click", () => overlay.classList.remove("show"));
+      }
+      if (overlay) {
+        overlay.addEventListener("click", (e) => {
+          if (e.target === overlay) overlay.classList.remove("show");
+        });
+      }
+
+      if (restartBtn) {
+        restartBtn.addEventListener("click", () => {
+          window.location.href = "./index.html";
+        });
+      }
+
+      if (copyJsonBtn) {
+        copyJsonBtn.addEventListener("click", async () => {
+          const json = overlay.dataset.analysisJson || "";
+          if (!json) {
+            showReportToast("Kopyalanacak JSON yok.", { error: true });
+            return;
+          }
+          try {
+            await navigator.clipboard.writeText(json);
+            showReportToast("JSON kopyalandı!", { error: false });
+          } catch {
+            showReportToast("Kopyalama başarısız.", { error: true });
+          }
+        });
+      }
+
+      /* =============================================================
+        12) Mülakat Başlatma
+      ============================================================== */
+      // Emin ol ki DOM yüklendi
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+          subStatus.textContent = "Hazırlanıyor…";
+          startInterview().catch((err) => {
+            console.error("Simülasyon başlatma hatası:", err);
+            showToast(String(err?.message || "Simülasyon başlatılamadı. Sayfayı yenileyip tekrar deneyin."), { error: true });
+            subStatus.textContent = "Hata: Sayfayı yenileyip tekrar deneyin.";
+            sendBtn.disabled = false;
+            if (finishBtn) finishBtn.disabled = false;
+            if (finishTopBtn) finishTopBtn.disabled = false;
+          });
+        });
+      } else {
+        subStatus.textContent = "Hazırlanıyor…";
+        startInterview().catch((err) => {
+          console.error("Simülasyon başlatma hatası:", err);
+          showToast(String(err?.message || "Simülasyon başlatılamadı. Sayfayı yenileyip tekrar deneyin."), { error: true });
+          subStatus.textContent = "Hata: Sayfayı yenileyip tekrar deneyin.";
+          sendBtn.disabled = false;
+          if (finishBtn) finishBtn.disabled = false;
+          if (finishTopBtn) finishTopBtn.disabled = false;
+        });
+      }
+    </script>
+  </body>
+</html>
+</html>

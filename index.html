@@ -1,0 +1,1111 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#111827" />
+    <title>InterviewHub - Mülakat Simülasyonu</title>
+    <style>
+      :root {
+        --bg0: #070a12;
+        --bg1: #0b1220;
+        --card: rgba(255, 255, 255, 0.06);
+        --card2: rgba(255, 255, 255, 0.08);
+        --stroke: rgba(255, 255, 255, 0.14);
+        --text: rgba(255, 255, 255, 0.92);
+        --muted: rgba(255, 255, 255, 0.68);
+        --primary: #6d5efc;
+        --primary2: #22c55e;
+        --danger: #fb7185;
+        --shadow: 0 30px 90px rgba(0, 0, 0, 0.55);
+        --radius: 18px;
+        --aurora1: rgba(109, 94, 252, 0.55);
+        --aurora2: rgba(17, 24, 39, 0.75);
+        --aurora3: rgba(20, 184, 166, 0.35);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial,
+          "Apple Color Emoji", "Segoe UI Emoji";
+        color: var(--text);
+        background-color: #000000;
+        position: relative;
+        overflow-x: hidden;
+        overflow-y: auto;
+        min-height: 100vh;
+      }
+
+      /* Night Sky - Kozmik Arka Plan */
+      .night-sky {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: -1;
+        background: radial-gradient(circle at center, #000205 0%, #000000 100%);
+      }
+
+      .aurora-layer {
+        position: absolute;
+        width: 150%;
+        height: 150%;
+        top: -25%;
+        left: -25%;
+        filter: blur(120px);
+        opacity: 0.4;
+        mix-blend-mode: screen;
+        animation: drift 25s infinite linear;
+      }
+
+      .blue {
+        background: radial-gradient(circle at 20% 30%, #001a4d 0%, transparent 50%);
+        animation-duration: 30s;
+      }
+
+      .purple {
+        background: radial-gradient(circle at 80% 70%, #2d004d 0%, transparent 55%);
+        animation-duration: 20s;
+        animation-direction: reverse;
+      }
+
+      .deep-blue {
+        background: radial-gradient(circle at 50% 50%, #0a192f 0%, transparent 60%);
+        animation-duration: 40s;
+      }
+
+      @keyframes drift {
+        0% { 
+          transform: rotate(0deg) translate(0, 0) scale(1); 
+        }
+        50% { 
+          transform: rotate(10deg) translate(5%, 5%) scale(1.1); 
+        }
+        100% { 
+          transform: rotate(0deg) translate(0, 0) scale(1); 
+        }
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .wrap {
+        min-height: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 28px 16px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 1060px;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        align-items: stretch;
+      }
+
+      @media (max-width: 900px) {
+        .container {
+          flex-direction: column;
+        }
+      }
+
+      .card.formCard {
+        order: -1;
+        flex-shrink: 0;
+      }
+
+      .hero {
+        order: 2;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        padding: 0;
+      }
+
+      .hero > div {
+        border-radius: 18px;
+        min-height: 210px;
+        padding: 24px;
+      }
+
+      @media (max-width: 900px) {
+        .hero {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .logoSection {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 8px;
+      }
+
+      .logo {
+        width: 32px;
+        height: 32px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, rgba(109, 94, 252, 1), rgba(34, 197, 94, 0.9));
+        box-shadow: 0 8px 25px rgba(109, 94, 252, 0.2);
+        position: relative;
+        border: 1px solid rgba(255, 255, 255, 0.22);
+      }
+
+      .logo::after {
+        content: "";
+        position: absolute;
+        inset: 6px;
+        border-radius: 6px;
+        background: rgba(0, 0, 0, 0.24);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+      }
+
+      h1 {
+        font-size: 18px;
+        line-height: 1.12;
+        margin: 0 0 6px 0;
+        letter-spacing: -0.035em;
+        font-family: "Helvetica Neue", Helvetica, Arial, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
+          sans-serif;
+        text-rendering: geometricPrecision;
+        -webkit-font-smoothing: auto;
+        font-synthesis: none;
+      }
+
+      /* Dinamik Başlık Efekti (typing) */
+      .typing {
+        display: inline-block;
+        position: relative;
+      }
+
+      .typing::after {
+        content: "";
+        display: inline-block;
+        width: 10px;
+        height: 1.15em;
+        margin-left: 6px;
+        background: rgba(255, 255, 255, 0.72);
+        border-radius: 6px;
+        transform: translateY(2px);
+        animation: caretBlink 900ms step-end infinite;
+      }
+
+      /* Yazı tamamlanınca caret'i durdurmak için */
+      .typing.done::after {
+        animation: none;
+        opacity: 0;
+      }
+
+      @keyframes caretBlink {
+        0%,
+        50% {
+          opacity: 1;
+        }
+        51%,
+        100% {
+          opacity: 0;
+        }
+      }
+
+      .sub {
+        margin: 0 0 10px 0;
+        color: var(--muted);
+        font-size: 10px;
+        line-height: 1.45;
+      }
+
+      .featureGrid {
+        display: grid;
+        gap: 8px;
+        margin: 0;
+      }
+
+      .featureTitle {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 650;
+        font-size: 11px;
+      }
+
+      .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 999px;
+        background: rgba(109, 94, 252, 1);
+        box-shadow: 0 0 0 3px rgba(109, 94, 252, 0.18);
+        flex-shrink: 0;
+      }
+
+      .dot.g {
+        background: rgba(34, 197, 94, 1);
+        box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.16);
+      }
+
+      .feature p {
+        margin: 6px 0 0 0;
+        color: var(--muted);
+        font-size: 9.5px;
+        line-height: 1.4;
+      }
+
+      .card {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: var(--radius);
+        padding: 18px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        position: relative;
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+      }
+
+      /* Glassmorphism - Buzlu Cam Efekti */
+      .glass {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+      }
+
+      .hero > * {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+      }
+
+      .feature {
+        background: rgba(255, 255, 255, 0.04);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.10);
+      }
+
+      .card::before {
+        content: "";
+        position: absolute;
+        inset: -2px;
+        background:
+          radial-gradient(900px 260px at 15% 0%, rgba(109, 94, 252, 0.22), transparent 55%),
+          radial-gradient(850px 260px at 85% 10%, rgba(20, 184, 166, 0.18), transparent 58%);
+        pointer-events: none;
+      }
+
+      /* Premium ince parlak hat */
+      .card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: var(--radius);
+        pointer-events: none;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.22),
+          rgba(255, 255, 255, 0.08) 35%,
+          rgba(255, 255, 255, 0.16) 70%,
+          rgba(255, 255, 255, 0.10)
+        );
+        mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+        -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+        padding: 1px;
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        opacity: 0.75;
+      }
+
+      .cardInner {
+        position: relative;
+        z-index: 1;
+      }
+
+      .cardHeader {
+        display: flex;
+        align-items: start;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 14px;
+      }
+
+      .cardHeader h2 {
+        margin: 0;
+        font-size: 16px;
+        letter-spacing: -0.01em;
+      }
+
+      .badge {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.8);
+        padding: 7px 10px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        background: rgba(255, 255, 255, 0.04);
+        white-space: nowrap;
+      }
+
+      form {
+        display: grid;
+        gap: 12px;
+      }
+
+      label {
+        display: block;
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 6px;
+      }
+
+      .field {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.10);
+        border-radius: 14px;
+        padding: 12px;
+        transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
+      }
+
+      /* Interaktif Input Glow */
+      .field:focus-within {
+        border-color: rgba(109, 94, 252, 0.34);
+        background: rgba(255, 255, 255, 0.04);
+        box-shadow:
+          0 0 0 6px rgba(109, 94, 252, 0.14),
+          0 18px 70px rgba(109, 94, 252, 0.12);
+      }
+
+      input,
+      select {
+        width: 100%;
+        border: none;
+        outline: none;
+        background: transparent;
+        color: var(--text);
+        font-size: 14px;
+        padding: 2px 0;
+      }
+
+      input::placeholder {
+        color: rgba(255, 255, 255, 0.35);
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      @media (max-width: 520px) {
+        .row {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .help {
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.4;
+        margin-top: 8px;
+      }
+
+      .actions {
+        display: grid;
+        gap: 10px;
+        margin-top: 6px;
+      }
+
+      button {
+        border: none;
+        cursor: pointer;
+        width: 100%;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        border-radius: 14px;
+        padding: 12px 14px;
+        color: #0b1220;
+        background: linear-gradient(120deg, rgba(109, 94, 252, 1), rgba(20, 184, 166, 0.95), rgba(34, 197, 94, 0.95));
+        background-size: 200% 200%;
+        background-position: 20% 50%;
+        transition: transform 140ms ease, filter 140ms ease, background-position 240ms ease;
+      }
+
+      button:hover {
+        filter: brightness(1.05);
+        transform: translateY(-1px) scale(1.015);
+        background-position: 80% 50%;
+      }
+
+      button:disabled {
+        cursor: not-allowed;
+        opacity: 0.75;
+        transform: none;
+      }
+
+      .ghost {
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        background: rgba(255, 255, 255, 0.03);
+        color: rgba(255, 255, 255, 0.92);
+        font-weight: 650;
+      }
+
+      .toast {
+        display: none;
+        padding: 12px 12px;
+        border-radius: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        background: rgba(255, 255, 255, 0.05);
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 13px;
+        line-height: 1.45;
+      }
+
+      .toast.show {
+        display: block;
+      }
+
+      .toast.error {
+        border-color: rgba(251, 113, 133, 0.35);
+        background: rgba(251, 113, 133, 0.10);
+      }
+
+      .footerNote {
+        margin-top: 14px;
+        color: rgba(255, 255, 255, 0.55);
+        font-size: 12px;
+        line-height: 1.4;
+      }
+
+      /* ===== SEKMELER ===== */
+      .tabs {
+        display: flex;
+        gap: 8px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+        margin-bottom: 16px;
+      }
+
+      .tab {
+        padding: 12px 14px;
+        border: none;
+        background: transparent;
+        color: rgba(255, 255, 255, 0.62);
+        font-weight: 650;
+        font-size: 13px;
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        transition: color 160ms ease, border-color 160ms ease;
+      }
+
+      .tab.active {
+        color: rgba(255, 255, 255, 0.92);
+        border-bottom-color: rgba(109, 94, 252, 1);
+      }
+
+      .tab:hover:not(.active) {
+        color: rgba(255, 255, 255, 0.78);
+      }
+
+      .tabContent {
+        display: none;
+      }
+
+      .tabContent.active {
+        display: block;
+      }
+
+      /* ===== HAVUZ SORUSU LISTESI ===== */
+      .poolList {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        max-height: 300px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding: 12px;
+        background: rgba(255, 255, 255, 0.02);
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        scroll-behavior: smooth;
+      }
+
+      .poolList::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .poolList::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.04);
+        border-radius: 4px;
+      }
+
+      .poolList::-webkit-scrollbar-thumb {
+        background: rgba(109, 94, 252, 0.4);
+        border-radius: 4px;
+      }
+
+      .poolList::-webkit-scrollbar-thumb:hover {
+        background: rgba(109, 94, 252, 0.6);
+      }
+
+      #poolListContainer {
+        scroll-behavior: smooth;
+      }
+
+      #poolListContainer::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      #poolListContainer::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.04);
+        border-radius: 4px;
+      }
+
+      #poolListContainer::-webkit-scrollbar-thumb {
+        background: rgba(109, 94, 252, 0.4);
+        border-radius: 4px;
+      }
+
+      #poolListContainer::-webkit-scrollbar-thumb:hover {
+        background: rgba(109, 94, 252, 0.6);
+      }
+
+      .poolItem {
+        padding: 10px;
+        background: rgba(255, 255, 255, 0.04);
+        border-radius: 10px;
+        border-left: 3px solid rgba(109, 94, 252, 0.5);
+        font-size: 12px;
+        line-height: 1.5;
+      }
+
+      .poolMeta {
+        display: flex;
+        gap: 8px;
+        margin-top: 6px;
+        font-size: 10px;
+        color: rgba(255, 255, 255, 0.55);
+        flex-wrap: wrap;
+      }
+
+      .poolTag {
+        background: rgba(109, 94, 252, 0.2);
+        color: rgba(109, 94, 252, 1);
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-weight: 600;
+      }
+
+      .poolEmpty {
+        text-align: center;
+        color: rgba(255, 255, 255, 0.45);
+        padding: 20px;
+        font-size: 12px;
+      }
+
+      .srOnly {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="night-sky" aria-hidden="true">
+      <div class="aurora-layer blue"></div>
+      <div class="aurora-layer purple"></div>
+      <div class="aurora-layer deep-blue"></div>
+    </div>
+    <div class="wrap">
+      <div class="container" role="main">
+        <section class="hero" aria-label="InterviewHub açıklaması">
+          <!-- SOL KOLON: Logo + Açıklama -->
+          <div>
+            <div class="brand">
+              <div class="logo" aria-hidden="true"></div>
+              <div>
+                <div style="font-weight: 800; letter-spacing: -0.02em; font-size: 13px;">InterviewHub</div>
+                <div style="color: rgba(255, 255, 255, 0.62); font-size: 10px; margin-top: 2px">
+                  Mülakat antrenmanı
+                </div>
+              </div>
+            </div>
+            <p class="sub" style="margin: 8px 0 0 0; font-size: 11px; line-height: 1.5;">
+              Şirket, pozisyon ve deneyim seviyene göre sana uygun sorular gelir. Değerlendirildikten sonra güçlü yönlerin ve gelişim önerilerin raporlanır.
+            </p>
+          </div>
+
+          <!-- SAĞ KOLON: Sorular Nasıl Oluşturuluyor -->
+          <div>
+            <h3 style="margin: 0 0 8px 0; font-size: 13px; font-weight: 700;">Sorular Nasıl Oluşturuluyor?</h3>
+            <p style="margin: 8px 0; color: rgba(255, 255, 255, 0.68); font-size: 11px; line-height: 1.5;">
+              <strong>İki kaynaktan:</strong>
+            </p>
+            <ul style="margin: 4px 0 0 0; padding-left: 18px; color: rgba(255, 255, 255, 0.68); font-size: 11px; line-height: 1.6;">
+              <li><strong>Havuz Soruları:</strong> Gerçek görüşmelerden profesyonel sorular.</li>
+              <li><strong>AI Soruları:</strong> Şirket ve pozisyona göre anında oluşturulan sorular.</li>
+            </ul>
+            <p style="margin: 8px 0 0 0; color: rgba(255, 255, 255, 0.68); font-size: 11px; line-height: 1.5;">
+              Havuzda soru kalmazsa tüm sorular karıştırılır, fakat daha önceki sorular tekrar sorulmaz.
+            </p>
+          </div>
+        </section>
+
+        <aside class="card formCard" aria-label="Simülasyon başlatma formu">
+          <div class="cardInner">
+            <div class="cardHeader">
+              <h2>Simülasyon Kontrol Paneli</h2>
+              <div class="badge">Demo Mode</div>
+            </div>
+
+            <!-- SEKMELER -->
+            <div class="tabs">
+              <button class="tab active" data-tab="start" type="button">Simülasyonu Başlat</button>
+              <button class="tab" data-tab="contribute" type="button">Havuza Katkı</button>
+            </div>
+
+            <!-- TAB 1: Simülasyon Başlatma -->
+            <div id="tab-start" class="tabContent active">
+              <form id="startForm" novalidate>
+                <div class="field">
+                  <label for="company">Şirket adı</label>
+                  <input
+                    id="company"
+                    name="company"
+                    type="text"
+                    placeholder="Örn. Google, Amazon, Koç Holding"
+                    autocomplete="organization"
+                    required
+                    minlength="2"
+                  />
+                </div>
+
+                <div class="field">
+                  <label for="position">Pozisyon</label>
+                  <input
+                    id="position"
+                    name="position"
+                    type="text"
+                    placeholder="Örn. Frontend Engineer, Product Manager"
+                    required
+                    minlength="2"
+                  />
+                </div>
+
+                <div class="row">
+                  <div class="field">
+                    <label for="level">Deneyim seviyesi</label>
+                    <select id="level" name="level" required>
+                      <option value="" selected disabled>Seçiniz</option>
+                      <option value="intern">Staj / Intern</option>
+                      <option value="junior">Junior</option>
+                      <option value="mid">Mid</option>
+                      <option value="senior">Senior</option>
+                    </select>
+                  </div>
+
+                  <div class="field">
+                    <label for="goal">Hazırlık hedefi (opsiyonel)</label>
+                    <select id="goal" name="goal">
+                      <option value="baseline" selected>Genel hazırlık</option>
+                      <option value="tech-competence">Teknik yeterlilik</option>
+                      <option value="behavioral">Davranışsal</option>
+                      <option value="mixed">Karma</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="help" style="margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.1);">
+                  <strong>Hazırlık Hedeflerinin Anlamı:</strong> "Genel hazırlık" tüm konuları kapsar; "Teknik yeterlilik" teknik derinliğe odaklanır; "Davranışsal" kişilik ve iş tarzını değerlendirir; "Karma" hepsini birleştirir.
+                </div>
+
+                <div class="actions">
+                  <button id="submitBtn" type="submit">Simülasyonu Başlat</button>
+                </div>
+
+                <div id="toastStart" class="toast" role="status" aria-live="polite"></div>
+
+                <div class="footerNote">
+                  Not: Bu sayfa şimdilik seçimlerini tarayıcıda saklar. Backend/Interview ekranı hazır olduğunda
+                  buradan yönlendirme yapılır.
+                </div>
+              </form>
+            </div>
+
+            <!-- TAB 2: Havuza Katkı -->
+            <div id="tab-contribute" class="tabContent">
+              <form id="contributeForm" novalidate>
+                <p style="color: rgba(255, 255, 255, 0.68); font-size: 12px; margin: 0 0 12px 0; line-height: 1.5;">
+                  Sahip olduğun gerçek mülakat sorularını buraya ekle. Bunlar diğer adaylar için simülasyon esnasında kullanılacak.
+                </p>
+
+                <div class="field">
+                  <label for="contCompany">Şirket adı (hangi şirkette görüldü?)</label>
+                  <input
+                    id="contCompany"
+                    name="company"
+                    type="text"
+                    placeholder="Örn. Google, Amazon"
+                    required
+                    minlength="2"
+                  />
+                </div>
+
+                <div class="field">
+                  <label for="contPosition">Pozisyon (hangi rolü için?)</label>
+                  <input
+                    id="contPosition"
+                    name="position"
+                    type="text"
+                    placeholder="Örn. Backend Engineer"
+                    required
+                    minlength="2"
+                  />
+                </div>
+
+                <div class="row">
+                  <div class="field">
+                    <label for="contLevel">Deneyim seviyesi</label>
+                    <select id="contLevel" name="level" required>
+                      <option value="" selected disabled>Seçiniz</option>
+                      <option value="intern">Staj / Intern</option>
+                      <option value="junior">Junior</option>
+                      <option value="mid">Mid</option>
+                      <option value="senior">Senior</option>
+                    </select>
+                  </div>
+
+                  <div class="field">
+                    <label for="contStage">Mülakat Aşaması</label>
+                    <select id="contStage" name="stage" required>
+                      <option value="" selected disabled>Seçiniz</option>
+                      <option value="intro">Giriş / Tanışma</option>
+                      <option value="technical">Teknik / Pozisyon</option>
+                      <option value="closing">Kapanış / Davranışsal</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label for="contQuestion">Soru Metni</label>
+                  <textarea
+                    id="contQuestion"
+                    name="question"
+                    placeholder="Mülakat sırasında sana sorulan soruyu yazınız..."
+                    required
+                    minlength="10"
+                    style="
+                      width: 100%;
+                      border: none;
+                      background: transparent;
+                      color: var(--text);
+                      font-size: 14px;
+                      padding: 8px 0;
+                      font-family: inherit;
+                      resize: vertical;
+                      min-height: 80px;
+                      outline: none;
+                    "
+                  ></textarea>
+                </div>
+
+                <div class="actions">
+                  <button id="contributeBtn" type="submit">Havuza Ekle</button>
+                </div>
+
+                <div id="toastContribute" class="toast" role="status" aria-live="polite"></div>
+
+                <div class="footerNote" style="margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.1);">
+                  <strong>Eklenen Sorular (Havuz):</strong>
+                  <div id="poolListContainer" style="margin-top: 10px; max-height: 400px; overflow-y: auto; overflow-x: hidden; padding-right: 6px;">
+                    <div class="poolEmpty">Henüz soru eklenmemiş.</div>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+          </div>
+        </aside>
+
+
+      </div>
+    </div>
+
+    <script>
+      /* ===== UI ELEMANLAR ===== */
+      const startForm = document.getElementById("startForm");
+      const submitBtn = document.getElementById("submitBtn");
+      const toastStart = document.getElementById("toastStart");
+
+      const contributeForm = document.getElementById("contributeForm");
+      const contributeBtn = document.getElementById("contributeBtn");
+      const toastContribute = document.getElementById("toastContribute");
+      const poolListContainer = document.getElementById("poolListContainer");
+
+      const companyEl = document.getElementById("company");
+      const positionEl = document.getElementById("position");
+      const levelEl = document.getElementById("level");
+      const goalEl = document.getElementById("goal");
+
+      const contCompanyEl = document.getElementById("contCompany");
+      const contPositionEl = document.getElementById("contPosition");
+      const contLevelEl = document.getElementById("contLevel");
+      const contStageEl = document.getElementById("contStage");
+      const contQuestionEl = document.getElementById("contQuestion");
+
+      /* ===== SEKMELER ===== */
+      const tabButtons = document.querySelectorAll(".tab");
+      const tabContents = document.querySelectorAll(".tabContent");
+
+      tabButtons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const tabName = btn.getAttribute("data-tab");
+          
+          // Tüm sekmeler deaktif
+          tabButtons.forEach((b) => b.classList.remove("active"));
+          tabContents.forEach((c) => c.classList.remove("active"));
+          
+          // Seçileni aktif et
+          btn.classList.add("active");
+          document.getElementById(`tab-${tabName}`).classList.add("active");
+        });
+      });
+
+      /* ===== TOAST MESSAGES ===== */
+      function showToast(el, message, { error = false } = {}) {
+        el.textContent = message;
+        el.classList.toggle("error", error);
+        el.classList.add("show");
+      }
+
+      function hideToast(el) {
+        el.classList.remove("show");
+      }
+
+      /* ===== SİMÜLASYON BAŞLATMA (EXISTING) ===== */
+      function validate() {
+        const company = companyEl.value.trim();
+        const position = positionEl.value.trim();
+        const level = levelEl.value;
+
+        if (company.length < 2) return { ok: false, error: "Şirket adını 2+ karakter gir." };
+        if (position.length < 2) return { ok: false, error: "Pozisyonu 2+ karakter gir." };
+        if (!level) return { ok: false, error: "Deneyim seviyesini seç." };
+        return { ok: true, company, position, level, goal: goalEl.value };
+      }
+
+      startForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        hideToast(toastStart);
+
+        const result = validate();
+        if (!result.ok) {
+          showToast(toastStart, result.error, { error: true });
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Hazırlanıyor...";
+
+        const payload = {
+          company: result.company,
+          position: result.position,
+          level: result.level,
+          goal: result.goal,
+          startedAt: new Date().toISOString(),
+        };
+
+        try {
+          localStorage.setItem("interviewhub:startPayload", JSON.stringify(payload));
+        } catch (_) {
+          // localStorage erişimi engellenirse, kullanıcıya sadece bilgi veriyoruz.
+        }
+
+        // MVP akışı: seçimleri kaydet -> interview.html'e yönlendir
+        setTimeout(() => {
+          window.location.href = "./interview.html";
+        }, 350);
+      });
+
+      /* ===== HAVUZA KATKI ===== */
+      function safeJsonParse(str) {
+        try {
+          return JSON.parse(str);
+        } catch {
+          return null;
+        }
+      }
+
+      function readCommunityPool() {
+        const raw = localStorage.getItem("community_questions");
+        if (!raw) return [];
+        const parsed = safeJsonParse(raw);
+        return Array.isArray(parsed) ? parsed : [];
+      }
+
+      function saveCommunityPool(pool) {
+        try {
+          localStorage.setItem("community_questions", JSON.stringify(pool));
+        } catch (e) {
+          console.warn("localStorage full veya devre dışı:", e);
+        }
+      }
+
+      function renderPoolList() {
+        const pool = readCommunityPool();
+        poolListContainer.innerHTML = "";
+
+        if (pool.length === 0) {
+          poolListContainer.innerHTML = '<div class="poolEmpty">Henüz soru eklenmemiş.</div>';
+          return;
+        }
+
+        const list = document.createElement("div");
+        list.className = "poolList";
+
+        for (const item of pool) {
+          const itemEl = document.createElement("div");
+          itemEl.className = "poolItem";
+
+          const q = item.question || item.q || item.text || "";
+          const company = item.company || "";
+          const position = item.position || "";
+          const level = item.level || "";
+          const stage = item.stage || "";
+          const addedAt = item.addedAt || "";
+
+          itemEl.innerHTML = `
+            <div style="color: rgba(255, 255, 255, 0.92); line-height: 1.5;">"${q}"</div>
+            <div class="poolMeta">
+              ${company ? `<span class="poolTag">${company}</span>` : ""}
+              ${position ? `<span class="poolTag">${position}</span>` : ""}
+              ${level ? `<span class="poolTag">${level}</span>` : ""}
+              ${stage ? `<span class="poolTag">${stage}</span>` : ""}
+              ${addedAt ? `<span style="opacity:0.7;">${new Date(addedAt).toLocaleDateString("tr-TR")}</span>` : ""}
+            </div>
+          `;
+
+          list.appendChild(itemEl);
+        }
+
+        poolListContainer.appendChild(list);
+      }
+
+      contributeForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        hideToast(toastContribute);
+
+        const company = contCompanyEl.value.trim();
+        const position = contPositionEl.value.trim();
+        const level = contLevelEl.value;
+        const stage = contStageEl.value;
+        const question = contQuestionEl.value.trim();
+
+        if (company.length < 2) {
+          showToast(toastContribute, "Şirket adını 2+ karakter gir.", { error: true });
+          return;
+        }
+        if (position.length < 2) {
+          showToast(toastContribute, "Pozisyonu 2+ karakter gir.", { error: true });
+          return;
+        }
+        if (!level) {
+          showToast(toastContribute, "Deneyim seviyesini seç.", { error: true });
+          return;
+        }
+        if (!stage) {
+          showToast(toastContribute, "Mülakat aşamasını seç.", { error: true });
+          return;
+        }
+        if (question.length < 10) {
+          showToast(toastContribute, "Soru 10+ karakter uzunluğunda olmalı.", { error: true });
+          return;
+        }
+
+        // Yeni soru objesi
+        const newQuestion = {
+          company,
+          position,
+          level,
+          stage,
+          question,
+          goal: "community", // kaynak işareti
+          addedAt: new Date().toISOString(),
+        };
+
+        // Pool'a ekle
+        const pool = readCommunityPool();
+        pool.push(newQuestion);
+        saveCommunityPool(pool);
+
+        // Formu temizle
+        contributeForm.reset();
+
+        // Listeyi güncelle
+        renderPoolList();
+
+        // Toast göster
+        showToast(toastContribute, "✓ Soru başarıyla havuza eklendi! Diğer adaylar simülasyon sırasında bu soruyu görebilecek.");
+        
+        // Toast'ı 3 saniye sonra gizle
+        setTimeout(() => hideToast(toastContribute), 3000);
+      });
+
+      /* ===== SAYFA YÜKLENME ===== */
+      document.addEventListener("DOMContentLoaded", () => {
+        renderPoolList();
+      });
+
+      // Dinamik başlık: daktilo efekti (eğer var ise)
+      (function runTypingEffect() {
+        const el = document.getElementById("heroTitle");
+        if (!el) return;
+
+        const full = el.getAttribute("data-text") || "";
+        el.textContent = "";
+
+        let i = 0;
+        const speedMs = 78;
+
+        function tick() {
+          i += 1;
+          el.textContent = full.slice(0, i);
+          if (i < full.length) {
+            window.setTimeout(tick, speedMs);
+          } else {
+            // Yazım bitince caret'i durdur (yanıp sönmesin)
+            el.classList.add("done");
+          }
+        }
+
+        window.setTimeout(tick, 260);
+      })();
+    </script>
+  </body>
+</html>
+
